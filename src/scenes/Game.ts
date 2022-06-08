@@ -7,6 +7,8 @@ export default class Game extends Phaser.Scene {
     // Phaser 3's design doesn't let us create a tile sprite in constructor, so use non-null assertion
     private background!: Phaser.GameObjects.TileSprite;
 
+    private mouseHole!: Phaser.GameObjects.Image;
+
     constructor() {
         super(SceneKeys.Game);
     }
@@ -45,6 +47,7 @@ export default class Game extends Phaser.Scene {
 
         // image: no animation
         // sprite: has animation
+
         // this.add
         //     .sprite(
         //         width * 0.5, // middle of screen
@@ -54,6 +57,12 @@ export default class Game extends Phaser.Scene {
         //     )
         //     .play(AnimationKey.RocketMouseRun);
 
+        // Create mouse hole here so it will layer properly - after the background & before Rocket Mouse
+        this.mouseHole = this.add.image(
+            Phaser.Math.Between(900, 1500), // x value
+            501, // y value
+            TextureKeys.MouseHole
+        );
 
         const mouse = this.physics.add // add physic to the above code and store it into a constant
             .sprite(
@@ -97,9 +106,22 @@ export default class Game extends Phaser.Scene {
      * @param dt deltaTime
      */
     update(t: number, dt: number) {
+        this.wrapMouseHole()
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
     }
 
+    // determine when the mouseHole scrolls off the left side of the screen
+    // and give it a new position ahead of Rocket Mouse
+    private wrapMouseHole() {
+        const scrollX = this.cameras.main.scrollX;
+        // right side of the screen
+        const rightEdge = scrollX + this.scale.width;
 
+        // check when the mouse hole has scroll of the left side of the screen
+        if (this.mouseHole.x + this.mouseHole.width < scrollX) {
+            // 100 - 1000 px past the right side of the screen 
+            this.mouseHole.x = Phaser.Math.Between(rightEdge + 100, rightEdge + 1000);
+        }
+    }
 }
