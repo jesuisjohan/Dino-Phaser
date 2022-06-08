@@ -12,6 +12,9 @@ export default class Game extends Phaser.Scene {
     private window1!: Phaser.GameObjects.Image;
     private window2!: Phaser.GameObjects.Image;
 
+    private bookcase1!: Phaser.GameObjects.Image;
+    private bookcase2!: Phaser.GameObjects.Image;
+
     constructor() {
         super(SceneKeys.Game);
     }
@@ -71,6 +74,11 @@ export default class Game extends Phaser.Scene {
         this.window1 = this.add.image(Phaser.Math.Between(900, 1300), 200, TextureKeys.Window1);
         this.window2 = this.add.image(Phaser.Math.Between(1600, 2000), 200, TextureKeys.Window2);
 
+        // Create bookcases here so it will layer properly - before Rocket Mouse
+        // Set each bookcase's origin to its foot
+        this.bookcase1 = this.add.image(Phaser.Math.Between(2200, 2700), 580, TextureKeys.Bookcase1).setOrigin(0.5, 1);
+        this.bookcase2 = this.add.image(Phaser.Math.Between(2900, 3400), 580, TextureKeys.Bookcase2).setOrigin(0.5, 1);
+
         const mouse = this.physics.add // add physic to the above code and store it into a constant
             .sprite(
                 // (0, 0)   is top left
@@ -115,6 +123,7 @@ export default class Game extends Phaser.Scene {
     update(t: number, dt: number) {
         this.wrapMouseHole();
         this.wrapWindows();
+        this.wrapBookcases();
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
     }
@@ -142,8 +151,20 @@ export default class Game extends Phaser.Scene {
         if (this.window1.x + width < scrollX)
             this.window1.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 800);
 
-        width = this.window2.width * 2;
+        width = this.window2.width;
         if (this.window2.x + width < scrollX)
             this.window2.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 800);
+    }
+
+    private wrapBookcases() {
+        const scrollX = this.cameras.main.scrollX;
+        const rightEdge = scrollX + this.scale.width;
+
+        let width = this.bookcase1.width * 2;
+        if (this.bookcase1.x + width < scrollX)
+            this.bookcase1.x = Phaser.Math.Between(rightEdge + width, rightEdge + 800);
+        width = this.bookcase1.width;
+        if (this.bookcase2.x + width < scrollX)
+            this.bookcase2.x = Phaser.Math.Between(rightEdge + width, rightEdge + 800);
     }
 }

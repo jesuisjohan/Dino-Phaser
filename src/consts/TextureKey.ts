@@ -4,6 +4,8 @@ enum TextureKeys {
     MouseHole = "mouse-hole",
     Window1 = 'window-1',
     Window2 = 'window-2',
+    Bookcase1 = 'bookcase1',
+    Bookcase2 = 'bookcase2',
 }
 
 export default TextureKeys;
