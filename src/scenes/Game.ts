@@ -9,6 +9,9 @@ export default class Game extends Phaser.Scene {
 
     private mouseHole!: Phaser.GameObjects.Image;
 
+    private window1!: Phaser.GameObjects.Image;
+    private window2!: Phaser.GameObjects.Image;
+
     constructor() {
         super(SceneKeys.Game);
     }
@@ -64,6 +67,10 @@ export default class Game extends Phaser.Scene {
             TextureKeys.MouseHole
         );
 
+        // Create windows here so it will layer properly - before Rocket Mouse
+        this.window1 = this.add.image(Phaser.Math.Between(900, 1300), 200, TextureKeys.Window1);
+        this.window2 = this.add.image(Phaser.Math.Between(1600, 2000), 200, TextureKeys.Window2);
+
         const mouse = this.physics.add // add physic to the above code and store it into a constant
             .sprite(
                 // (0, 0)   is top left
@@ -106,7 +113,8 @@ export default class Game extends Phaser.Scene {
      * @param dt deltaTime
      */
     update(t: number, dt: number) {
-        this.wrapMouseHole()
+        this.wrapMouseHole();
+        this.wrapWindows();
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
     }
@@ -120,8 +128,22 @@ export default class Game extends Phaser.Scene {
 
         // check when the mouse hole has scroll of the left side of the screen
         if (this.mouseHole.x + this.mouseHole.width < scrollX) {
-            // 100 - 1000 px past the right side of the screen 
+            // 100 - 1000 px past the right side of the screen
             this.mouseHole.x = Phaser.Math.Between(rightEdge + 100, rightEdge + 1000);
         }
+    }
+
+    private wrapWindows() {
+        const scrollX = this.cameras.main.scrollX;
+        // right side of the screen
+        const rightEdge = scrollX + this.scale.width;
+
+        let width = this.window1.width * 2;
+        if (this.window1.x + width < scrollX)
+            this.window1.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 800);
+
+        width = this.window2.width * 2;
+        if (this.window2.x + width < scrollX)
+            this.window2.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 800);
     }
 }
