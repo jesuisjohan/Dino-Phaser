@@ -26,18 +26,18 @@ export default class Game extends Phaser.Scene {
     // no need anymore because of Preloader class
 
     create() {
-        this.anims.create({
-            key: AnimationKeys.RocketMouseRun, // name of this animation
-            frames: this.anims.generateFrameNames("rocket-mouse", {
-                start: 1,
-                end: 4,
-                prefix: "rocketmouse_run",
-                zeroPad: 2, // necessary if more than 9 frames
-                suffix: ".png",
-            }),
-            frameRate: 10,
-            repeat: -1, // -1 to loop forever
-        });
+        // this.anims.create({
+        //     key: AnimationKeys.RocketMouseRun, // name of this animation
+        //     frames: this.anims.generateFrameNames("rocket-mouse", {
+        //         start: 1,
+        //         end: 4,
+        //         prefix: "rocketmouse_run",
+        //         zeroPad: 2, // necessary if more than 9 frames
+        //         suffix: ".png",
+        //     }),
+        //     frameRate: 10,
+        //     repeat: -1, // -1 to loop forever
+        // });
 
         // +x is to left, -x is to right
         // +y is to top, -y is to bottom

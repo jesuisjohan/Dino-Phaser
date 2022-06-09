@@ -22,10 +22,12 @@ export default class Preloader extends Phaser.Scene {
         this.load.image(TextureKeys.Bookcase1, "house/object_bookcase1.png");
         this.load.image(TextureKeys.Bookcase2, "house/object_bookcase2.png");
 
+        // Laser
+        this.load.image(TextureKeys.LaserMiddle, "house/object_laser_end.png");
+        this.load.image(TextureKeys.LaserMiddle, "house/object_laser.png");
+
         // the sprite sheet
         this.load.atlas(TextureKeys.RocketMouse, "characters/rocket-mouse.png", "characters/rocket-mouse.json");
-
-        // throw new Error("test");
     }
 
     create() {
@@ -46,7 +48,8 @@ export default class Preloader extends Phaser.Scene {
         // new fall animation
         this.anims.create({
             key: AnimationKeys.RocketMouseFall,
-            frames: [ // this key frame is created manually stead of using generateFrameNames
+            frames: [
+                // this key frame is created manually stead of using generateFrameNames
                 {
                     key: TextureKeys.RocketMouse,
                     frame: "rocketmouse_fall01.png",
@@ -63,7 +66,7 @@ export default class Preloader extends Phaser.Scene {
                     frame: "rocketmouse_fly01.png",
                 },
             ],
-            // no frame rate or repeat because only 
+            // no frame rate or repeat because only
         });
 
         // // create flame animation
