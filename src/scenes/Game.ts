@@ -157,6 +157,9 @@ export default class Game extends Phaser.Scene {
             this.window1.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 800);
 
             // look for a bookcase that overlaps with the new window position
+            /**
+             * any distance smaller than the width of the window is considered an overlap
+             */
             const overlap = this.bookcases.find((bookcase) => {
                 return Math.abs(this.window1.x - bookcase.x) <= this.window1.width;
             });
@@ -168,6 +171,7 @@ export default class Game extends Phaser.Scene {
         if (this.window2.x + width < scrollX) {
             this.window2.x = Phaser.Math.Between(this.window1.x + width, this.window1.x + width + 800);
 
+            // similar to above
             const overlap = this.bookcases.find((bookcase) => {
                 return Math.abs(this.window2.x - bookcase.x) <= this.window2.width;
             });
@@ -181,10 +185,26 @@ export default class Game extends Phaser.Scene {
         const rightEdge = scrollX + this.scale.width;
 
         let width = this.bookcase1.width * 2;
-        if (this.bookcase1.x + width < scrollX)
+        if (this.bookcase1.x + width < scrollX) {
             this.bookcase1.x = Phaser.Math.Between(rightEdge + width, rightEdge + 800);
+
+            const overlap = this.windows.find((window) => {
+                // use window width because window width is greater than bookcase width 
+                return Math.abs(this.bookcase1.x - window.x) <= window.width;
+            });
+
+            this.bookcase1.visible = !overlap;
+        }
         width = this.bookcase1.width;
-        if (this.bookcase2.x + width < scrollX)
+        if (this.bookcase2.x + width < scrollX) {
             this.bookcase2.x = Phaser.Math.Between(this.bookcase1.x + width, this.bookcase1.x + width + 800);
+
+            const overlap = this.windows.find((window) => {
+                // use window width because window width is greater than bookcase width
+                return Math.abs(this.bookcase2.x - window.x) <= window.width;
+            });
+
+            this.bookcase2.visible = !overlap;
+        }
     }
 }
