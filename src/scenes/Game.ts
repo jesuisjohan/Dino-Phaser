@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 import SceneKeys from "~/consts/SceneKeys";
-import AnimationKey from "~/consts/AnimationKey";
+import AnimationKeys from "~/consts/AnimationKeys";
 import TextureKeys from "~/consts/TextureKey";
+import RocketMouse from "~/game/RocketMouse";
 export default class Game extends Phaser.Scene {
     // create background class property
     // Phaser 3's design doesn't let us create a tile sprite in constructor, so use non-null assertion
@@ -26,7 +27,7 @@ export default class Game extends Phaser.Scene {
 
     create() {
         this.anims.create({
-            key: AnimationKey.RocketMouseRun, // name of this animation
+            key: AnimationKeys.RocketMouseRun, // name of this animation
             frames: this.anims.generateFrameNames("rocket-mouse", {
                 start: 1,
                 end: 4,
@@ -84,18 +85,23 @@ export default class Game extends Phaser.Scene {
         this.bookcase2 = this.add.image(Phaser.Math.Between(2900, 3400), 580, TextureKeys.Bookcase2).setOrigin(0.5, 1);
         this.bookcases = [this.bookcase1, this.bookcase2];
 
-        const mouse = this.physics.add // add physic to the above code and store it into a constant
-            .sprite(
-                // (0, 0)   is top left
-                // (1, 1)   is the bottom right
-                // (0.5, 1) is bottom middle where the feet are
-                width * 0.5,
-                height - 30, // set y to top of the floor instead of mid-air
-                TextureKeys.RocketMouse,
-                "rocketmouse_fly01.png"
-            )
-            .setOrigin(0.5, 1) // set origin to feet
-            .play(AnimationKey.RocketMouseRun);
+        // const mouse = this.physics.add // add physic to the above code and store it into a constant
+        //     .sprite(
+        //         // (0, 0)   is top left
+        //         // (1, 1)   is the bottom right
+        //         // (0.5, 1) is bottom middle where the feet are
+        //         width * 0.5,
+        //         height - 30, // set y to top of the floor instead of mid-air
+        //         TextureKeys.RocketMouse,
+        //         "rocketmouse_fly01.png"
+        //     )
+        //     .setOrigin(0.5, 1) // set origin to feet
+        //     .play(AnimationKey.RocketMouseRun);
+
+        // add new RocketMouse
+        // initially, this mouse doesn't have body property -> add physics to Container
+        const mouse = new RocketMouse(this, width * 0.5, height - 30);
+        this.add.existing(mouse);
 
         // mouse.body can be static or not, type casting helps VS Code give us accurate autocomplete
         const body = mouse.body as Phaser.Physics.Arcade.Body;
