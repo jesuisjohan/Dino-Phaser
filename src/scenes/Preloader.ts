@@ -24,6 +24,8 @@ export default class Preloader extends Phaser.Scene {
 
         // the sprite sheet
         this.load.atlas(TextureKeys.RocketMouse, "characters/rocket-mouse.png", "characters/rocket-mouse.json");
+
+        // throw new Error("test");
     }
 
     create() {
@@ -34,11 +36,34 @@ export default class Preloader extends Phaser.Scene {
                 start: 1,
                 end: 4,
                 prefix: "rocketmouse_run",
-                zeroPad: 2,
+                zeroPad: 2, // necessary when >= 9 frames
                 suffix: ".png",
             }),
             frameRate: 10,
             repeat: -1,
+        });
+
+        // new fall animation
+        this.anims.create({
+            key: AnimationKeys.RocketMouseFall,
+            frames: [ // this key frame is created manually stead of using generateFrameNames
+                {
+                    key: TextureKeys.RocketMouse,
+                    frame: "rocketmouse_fall01.png",
+                },
+            ],
+        });
+
+        // new fly animation
+        this.anims.create({
+            key: AnimationKeys.RocketMouseFly,
+            frames: [
+                {
+                    key: TextureKeys.RocketMouse,
+                    frame: "rocketmouse_fly01.png",
+                },
+            ],
+            // no frame rate or repeat because only 
         });
 
         // // create flame animation

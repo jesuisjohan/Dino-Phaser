@@ -9,13 +9,15 @@ import AnimationKeys from "~/consts/AnimationKeys";
 
 // Phaser.GameObjects.Container instead of Phaser.Scene
 export default class RocketMouse extends Phaser.GameObjects.Container {
+    private mouse: Phaser.GameObjects.Sprite;
     private flames: Phaser.GameObjects.Sprite;
+    private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y);
 
         // create the Rocket Mouse sprite
-        const mouse = scene.add
+        this.mouse = scene.add
             .sprite(0, 0, TextureKeys.RocketMouse)
             .setOrigin(0.5, 1)
             .play(AnimationKeys.RocketMouseRun);
@@ -39,18 +41,45 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         // add to container
         // add here so flames will layer properly
         this.add(this.flames);
-        this.add(mouse);
+        this.add(this.mouse);
 
         // add a physic body
         scene.physics.add.existing(this);
 
         // adjust physics body size and effect
         const body = this.body as Phaser.Physics.Arcade.Body;
-        body.setSize(mouse.width, mouse.height);
-        body.setOffset(mouse.width * -0.5, -mouse.height);
+        body.setSize(this.mouse.width, this.mouse.height);
+        body.setOffset(this.mouse.width * -0.5, -this.mouse.height);
+
+        // get cursor key instance
+        this.cursors = scene.input.keyboard.createCursorKeys();
     }
 
     enableJetpack(enabled: boolean) {
         this.flames.setVisible(enabled);
+    }
+
+    // A Container does not normally implement a preUpdate() method but it will get called if we create one.
+    preUpdate() {
+        const body = this.body as Phaser.Physics.Arcade.Body;
+
+        if (this.cursors.space?.isDown) {
+            body.setAccelerationY(-600);
+            this.enableJetpack(true);
+
+            // play the fly animation - if already played, it will be ignored
+            this.mouse.play(AnimationKeys.RocketMouseFly, true);
+        } else {
+            body.setAccelerationY(0);
+            this.enableJetpack(false);
+        }
+
+        // check if touch the ground
+        if (body.blocked.down) {
+            // play run
+            this.mouse.play(AnimationKeys.RocketMouseRun, true);
+        } else if (body.velocity.y > 0) {
+            this.mouse.play(AnimationKeys.RocketMouseFall, true);
+        }
     }
 }
