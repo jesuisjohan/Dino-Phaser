@@ -189,7 +189,7 @@ export default class Game extends Phaser.Scene {
             this.bookcase1.x = Phaser.Math.Between(rightEdge + width, rightEdge + 800);
 
             const overlap = this.windows.find((window) => {
-                // use window width because window width is greater than bookcase width 
+                // use window width because window width is greater than bookcase width
                 return Math.abs(this.bookcase1.x - window.x) <= window.width;
             });
 
