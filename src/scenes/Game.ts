@@ -134,6 +134,8 @@ export default class Game extends Phaser.Scene {
             Number.MAX_SAFE_INTEGER, // upper bound
             height // lower bound
         );
+
+        this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
     }
     /**
      * update function
@@ -227,16 +229,22 @@ export default class Game extends Phaser.Scene {
     private wrapLaserObstacle() {
         const scrollX = this.cameras.main.scrollX;
         const rightEdge = scrollX + this.scale.width;
-        
+
         // because body is static, so have to update it
-        const body = this.laserObstacle.body as Phaser.Physics.Arcade.StaticBody
+        const body = this.laserObstacle.body as Phaser.Physics.Arcade.StaticBody;
         const width = this.laserObstacle.width;
         if (this.laserObstacle.x + width < scrollX) {
             this.laserObstacle.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 1000);
             this.laserObstacle.y = Phaser.Math.Between(0, 300);
 
             body.position.x = this.laserObstacle.x + body.offset.x;
-            body.position.y = this.laserObstacle.y
+            body.position.y = this.laserObstacle.y;
         }
+    }
+
+    private handleOverlapLaser(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+        console.log("overlap");
+        const mouse = obj2 as RocketMouse
+        mouse.kill()
     }
 }

@@ -38,7 +38,7 @@ export default class Preloader extends Phaser.Scene {
                 start: 1,
                 end: 4,
                 prefix: "rocketmouse_run",
-                zeroPad: 2, // necessary when >= 9 frames
+                zeroPad: 2, // zeroPad = 1 means 0, 1, .. 9, zeroPad = 2 means 00, 01, .. 99 
                 suffix: ".png",
             }),
             frameRate: 10,
@@ -82,6 +82,18 @@ export default class Preloader extends Phaser.Scene {
             repeat: -1,
         });
 
+        this.anims.create({
+            key: AnimationKeys.RocketMouseDead,
+            frames: this.anims.generateFrameNames(TextureKeys.RocketMouse, {
+                start: 1,
+                end: 2,
+                prefix: 'rocketmouse_dead',
+                zeroPad: 2,
+                suffix: '.png'
+            }),
+            frameRate: 10
+        })
+        
         this.scene.start(SceneKeys.Game);
     }
 }

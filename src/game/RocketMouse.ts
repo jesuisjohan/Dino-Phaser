@@ -59,6 +59,14 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         this.flames.setVisible(enabled);
     }
 
+    kill() {
+        this.mouse.play(AnimationKeys.RocketMouseDead)
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setAccelerationY(0)
+        body.setVelocity(1000, 0)
+        this.enableJetpack(false)
+    }
+
     // A Container does not normally implement a preUpdate() method but it will get called if we create one.
     preUpdate() {
         const body = this.body as Phaser.Physics.Arcade.Body;
