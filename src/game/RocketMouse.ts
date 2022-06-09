@@ -9,6 +9,8 @@ import AnimationKeys from "~/consts/AnimationKeys";
 
 // Phaser.GameObjects.Container instead of Phaser.Scene
 export default class RocketMouse extends Phaser.GameObjects.Container {
+    private flames: Phaser.GameObjects.Sprite;
+
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y);
 
@@ -30,11 +32,13 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         // .play(AnimationKey.RocketMouseRun);
 
         // create the flame and play the animation
-        const flames = scene.add.sprite(-63, -15, TextureKeys.RocketMouse).play(AnimationKeys.RocketFlamesOn);
-        
+        this.flames = scene.add.sprite(-63, -15, TextureKeys.RocketMouse).play(AnimationKeys.RocketFlamesOn);
+        // turn off jet pack
+        this.enableJetpack(false);
+
         // add to container
         // add here so flames will layer properly
-        this.add(flames);
+        this.add(this.flames);
         this.add(mouse);
 
         // add a physic body
@@ -44,6 +48,9 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.Body;
         body.setSize(mouse.width, mouse.height);
         body.setOffset(mouse.width * -0.5, -mouse.height);
+    }
 
+    enableJetpack(enabled: boolean) {
+        this.flames.setVisible(enabled);
     }
 }
