@@ -3,6 +3,8 @@ import SceneKeys from "~/consts/SceneKeys";
 import AnimationKeys from "~/consts/AnimationKeys";
 import TextureKeys from "~/consts/TextureKey";
 import RocketMouse from "~/game/RocketMouse";
+import LaserObstacle from "~/game/LaserObstacle";
+
 export default class Game extends Phaser.Scene {
     // create background class property
     // Phaser 3's design doesn't let us create a tile sprite in constructor, so use non-null assertion
@@ -15,6 +17,8 @@ export default class Game extends Phaser.Scene {
 
     private bookcase1!: Phaser.GameObjects.Image;
     private bookcase2!: Phaser.GameObjects.Image;
+
+    private laserObstacle!: LaserObstacle;
 
     private bookcases: Phaser.GameObjects.Image[] = []; // for checking overlapping
     private windows: Phaser.GameObjects.Image[] = []; // for checking overlapping
@@ -98,6 +102,11 @@ export default class Game extends Phaser.Scene {
         //     .setOrigin(0.5, 1) // set origin to feet
         //     .play(AnimationKey.RocketMouseRun);
 
+        // create laser obstacle
+
+        this.laserObstacle = new LaserObstacle(this, 900, 100);
+        this.add.existing(this.laserObstacle);
+
         // add new RocketMouse
         // initially, this mouse doesn't have body property -> add physics to Container
         const mouse = new RocketMouse(this, width * 0.5, height - 30);
@@ -135,6 +144,7 @@ export default class Game extends Phaser.Scene {
         this.wrapMouseHole();
         this.wrapWindows();
         this.wrapBookcases();
+        this.wrapLaserObstacle();
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
     }
@@ -211,6 +221,17 @@ export default class Game extends Phaser.Scene {
             });
 
             this.bookcase2.visible = !overlap;
+        }
+    }
+
+    private wrapLaserObstacle() {
+        const scrollX = this.cameras.main.scrollX;
+        const rightEdge = scrollX + this.scale.width;
+
+        const width = this.laserObstacle.width;
+        if (this.laserObstacle.x + width < scrollX) {
+            this.laserObstacle.x = Phaser.Math.Between(rightEdge + width, rightEdge + width + 1000);
+            this.laserObstacle.y = Phaser.Math.Between(0, 300);
         }
     }
 }
