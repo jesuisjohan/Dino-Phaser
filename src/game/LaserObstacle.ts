@@ -23,8 +23,8 @@ export default class LaserObstacle extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.StaticBody // will not be moved or pushed
         const width = top.displayWidth
         const height = top.displayHeight + middle.displayHeight + bottom.displayHeight
-        body.setSize(width, height)
-        body.setOffset(-width * 0.5, 0)
+        body.setSize(width * 0.5, height)
+        body.setOffset(-width * 0.25, 0)
         body.position.x = this.x + body.offset.x
         body.position.y = this.y
     }

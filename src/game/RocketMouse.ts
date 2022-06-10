@@ -59,8 +59,8 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
 
         // adjust physics body size and effect
         const body = this.body as Phaser.Physics.Arcade.Body;
-        body.setSize(this.mouse.width, this.mouse.height);
-        body.setOffset(this.mouse.width * -0.5, -this.mouse.height);
+        body.setSize(this.mouse.width * 0.5, this.mouse.height * 0.7);
+        body.setOffset(this.mouse.width * -0.3, -this.mouse.height+ 15);
 
         // get cursor key instance
         this.cursors = scene.input.keyboard.createCursorKeys();

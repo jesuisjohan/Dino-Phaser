@@ -26,8 +26,8 @@ export default class Game extends Phaser.Scene {
 
     private coins!: Phaser.Physics.Arcade.StaticGroup;
 
-    private scoreLabel!: Phaser.GameObjects.Text
-    private score = 0
+    private scoreLabel!: Phaser.GameObjects.Text;
+    private score = 0;
 
     constructor() {
         super(SceneKeys.Game);
@@ -38,7 +38,7 @@ export default class Game extends Phaser.Scene {
      * constructor cannot
      */
     init() {
-        this.score = 0
+        this.score = 0;
     }
 
     // no need anymore because of Preloader class
@@ -140,7 +140,7 @@ export default class Game extends Phaser.Scene {
             0, // x
             0, // y
             Number.MAX_SAFE_INTEGER, // width - computer memory is finite, so max integer is enough
-            height - 30 // height - make mouse middle of the floor
+            height - 55 // height - make mouse middle of the floor
         );
 
         // CAMERA
@@ -158,15 +158,15 @@ export default class Game extends Phaser.Scene {
         this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
         this.physics.add.overlap(this.coins, mouse, this.handleCollectCoin, undefined, this);
 
-            
-        this.scoreLabel = this.add.text(10, 10, `Score: ${this.score}`, {
-			fontSize: '24px',
-			color: '#080808',
-			backgroundColor: '#F8E71C',
-			shadow: { fill: true, blur: 0, offsetY: 0 },
-			padding: { left: 15, right: 15, top: 10, bottom: 10 }
-		})
-		.setScrollFactor(0)
+        this.scoreLabel = this.add
+            .text(10, 10, `Score: ${this.score}`, {
+                fontSize: "24px",
+                color: "#080808",
+                backgroundColor: "#F8E71C",
+                shadow: { fill: true, blur: 0, offsetY: 0 },
+                padding: { left: 15, right: 15, top: 10, bottom: 10 },
+            })
+            .setScrollFactor(0);
 
         this.listenMouseDead();
         this.listenRestart();
@@ -345,7 +345,7 @@ export default class Game extends Phaser.Scene {
         // turn off body
         coin.body.enable = false;
 
-        this.score++
-        this.scoreLabel.text = `Score: ${this.score}`
+        this.score++;
+        this.scoreLabel.text = `Score: ${this.score}`;
     }
 }
