@@ -90,13 +90,18 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.Body;
         switch (this.mouseState) {
             case MouseState.Running: {
-                if (this.cursors.space?.isDown) {
-                    body.setAccelerationY(-600);
+                if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+                    body.setAccelerationY(-1000);
                     this.enableJetpack(true);
 
                     // play the fly animation - if already played, it will be ignored
                     this.mouse.play(AnimationKeys.RocketMouseFly, true);
-                } else {
+                }
+                else if (this.cursors.down?.isDown) {
+                    body.setAccelerationY(2000);
+                    this.enableJetpack(false);
+                } 
+                else {
                     body.setAccelerationY(0);
                     this.enableJetpack(false);
                 }
