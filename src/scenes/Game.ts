@@ -26,8 +26,19 @@ export default class Game extends Phaser.Scene {
 
     private coins!: Phaser.Physics.Arcade.StaticGroup;
 
+    private scoreLabel!: Phaser.GameObjects.Text
+    private score = 0
+
     constructor() {
         super(SceneKeys.Game);
+    }
+
+    /**
+     * init means when restart, init() will be called
+     * constructor cannot
+     */
+    init() {
+        this.score = 0
     }
 
     // no need anymore because of Preloader class
@@ -143,7 +154,19 @@ export default class Game extends Phaser.Scene {
             height // lower bound
         );
 
+        // just like onCollisionEnter on Unity
         this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
+        this.physics.add.overlap(this.coins, mouse, this.handleCollectCoin, undefined, this);
+
+            
+        this.scoreLabel = this.add.text(10, 10, `Score: ${this.score}`, {
+			fontSize: '24px',
+			color: '#080808',
+			backgroundColor: '#F8E71C',
+			shadow: { fill: true, blur: 0, offsetY: 0 },
+			padding: { left: 15, right: 15, top: 10, bottom: 10 }
+		})
+		.setScrollFactor(0)
 
         this.listenMouseDead();
         this.listenRestart();
@@ -291,7 +314,7 @@ export default class Game extends Phaser.Scene {
         let x = rightEdge + 100;
 
         const numCoins = Phaser.Math.Between(1, 20);
-        
+
         // the coins based on random number from 1-20
         for (let i = 0; i < numCoins; i++) {
             const coin = this.coins.get(
@@ -299,19 +322,30 @@ export default class Game extends Phaser.Scene {
                 Phaser.Math.Between(100, this.scale.height - 100),
                 TextureKeys.Coin
             ) as Phaser.Physics.Arcade.Sprite;
-            
+
             // make sure coin is active and visible
             coin.setVisible(true);
             coin.setActive(true);
-            
+
             // enable and adjust physics body to be a circle
             const body = coin.body as Phaser.Physics.Arcade.StaticBody;
             body.setCircle(body.width * 0.5);
             body.enable = true;
-            
+
             // move x a random amount
             // next coin will be spaced away from the previous one
             x += coin.width * 1.5;
         }
+    }
+
+    private handleCollectCoin(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+        const coin = obj2 as Phaser.Physics.Arcade.Sprite;
+        // use the group to hide it
+        this.coins.killAndHide(coin);
+        // turn off body
+        coin.body.enable = false;
+
+        this.score++
+        this.scoreLabel.text = `Score: ${this.score}`
     }
 }
