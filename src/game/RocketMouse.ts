@@ -1,4 +1,3 @@
-import SceneKeys from "~/consts/SceneKeys";
 /**
  * Phaser game objects do not have children
  * But Phaser container do
@@ -7,6 +6,9 @@ import SceneKeys from "~/consts/SceneKeys";
 import Phaser from "phaser";
 import TextureKeys from "~/consts/TextureKey";
 import AnimationKeys from "~/consts/AnimationKeys";
+import SceneKeys from "~/consts/SceneKeys";
+
+import eventsCenter from "~/events/EventsCenter";
 
 enum MouseState {
     Running,
@@ -118,7 +120,10 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
             case MouseState.Dead: {
                 body.setVelocity(0, 0);
 
-                if (!this.scene.scene.isActive(SceneKeys.GameOver)) this.scene.scene.run(SceneKeys.GameOver);
+                if (!this.scene.scene.isActive(SceneKeys.GameOver)) {
+                    // this.scene.scene.run(SceneKeys.GameOver);
+                    eventsCenter.emit('dead')
+                }
                 break;
             }
         }

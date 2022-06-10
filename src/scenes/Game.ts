@@ -4,6 +4,7 @@ import AnimationKeys from "~/consts/AnimationKeys";
 import TextureKeys from "~/consts/TextureKey";
 import RocketMouse from "~/game/RocketMouse";
 import LaserObstacle from "~/game/LaserObstacle";
+import eventsCenter from "~/events/EventsCenter";
 
 export default class Game extends Phaser.Scene {
     // create background class property
@@ -136,6 +137,8 @@ export default class Game extends Phaser.Scene {
         );
 
         this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
+
+        this.listenMouseDead()
     }
     /**
      * update function
@@ -143,6 +146,8 @@ export default class Game extends Phaser.Scene {
      * @param dt deltaTime
      */
     update(t: number, dt: number) {
+        // this.checkIfMouseDead()
+
         this.wrapMouseHole();
         this.wrapWindows();
         this.wrapBookcases();
@@ -247,5 +252,14 @@ export default class Game extends Phaser.Scene {
         console.log("overlap");
         const mouse = obj2 as RocketMouse
         mouse.kill()
+        this.game
+    }
+
+
+    // using event
+    private listenMouseDead() {
+        eventsCenter.once('dead', () => {
+            this.scene.run(SceneKeys.GameOver)
+        })
     }
 }
