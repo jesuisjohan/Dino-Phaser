@@ -24,6 +24,8 @@ export default class Game extends Phaser.Scene {
     private bookcases: Phaser.GameObjects.Image[] = []; // for checking overlapping
     private windows: Phaser.GameObjects.Image[] = []; // for checking overlapping
 
+    private coins!: Phaser.Physics.Arcade.StaticGroup;
+
     constructor() {
         super(SceneKeys.Game);
     }
@@ -108,6 +110,11 @@ export default class Game extends Phaser.Scene {
         this.laserObstacle = new LaserObstacle(this, 900, 100);
         this.add.existing(this.laserObstacle);
 
+        // create coins
+
+        this.coins = this.physics.add.staticGroup();
+        this.spawnCoins();
+
         // add new RocketMouse
         // initially, this mouse doesn't have body property -> add physics to Container
         const mouse = new RocketMouse(this, width * 0.5, height - 30);
@@ -138,8 +145,8 @@ export default class Game extends Phaser.Scene {
 
         this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
 
-        this.listenMouseDead()
-        this.listenRestart()
+        this.listenMouseDead();
+        this.listenRestart();
     }
     /**
      * update function
@@ -155,7 +162,6 @@ export default class Game extends Phaser.Scene {
         this.wrapLaserObstacle();
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
-        
     }
 
     // determine when the mouseHole scrolls off the left side of the screen
@@ -251,23 +257,61 @@ export default class Game extends Phaser.Scene {
 
     private handleOverlapLaser(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
         console.log("overlap");
-        const mouse = obj2 as RocketMouse
-        mouse.kill()
-        this.game
+        const mouse = obj2 as RocketMouse;
+        mouse.kill();
+        this.game;
     }
-
 
     // using event
     private listenMouseDead() {
-        eventsCenter.once('dead', () => {
-            this.scene.run(SceneKeys.GameOver)
-        })
+        eventsCenter.once("dead", () => {
+            this.scene.run(SceneKeys.GameOver);
+        });
     }
 
     private listenRestart() {
-        eventsCenter.once('gameOver', () => {
-            this.scene.stop(SceneKeys.GameOver)
-            this.scene.restart()
-        })
+        eventsCenter.once("gameOver", () => {
+            this.scene.stop(SceneKeys.GameOver);
+            this.scene.restart();
+        });
+    }
+
+    spawnCoins() {
+        // make sure all coins are inactive and hidden
+        this.coins.children.each((child) => {
+            const coin = child as Phaser.Physics.Arcade.Sprite;
+            this.coins.killAndHide(coin);
+            coin.body.enable = false;
+        });
+
+        const scrollX = this.cameras.main.scrollX;
+        const rightEdge = scrollX + this.scale.width;
+
+        // start at 100 px past right side of the screen
+        let x = rightEdge + 100;
+
+        const numCoins = Phaser.Math.Between(1, 20);
+        
+        // the coins based on random number from 1-20
+        for (let i = 0; i < numCoins; i++) {
+            const coin = this.coins.get(
+                x,
+                Phaser.Math.Between(100, this.scale.height - 100),
+                TextureKeys.Coin
+            ) as Phaser.Physics.Arcade.Sprite;
+            
+            // make sure coin is active and visible
+            coin.setVisible(true);
+            coin.setActive(true);
+            
+            // enable and adjust physics body to be a circle
+            const body = coin.body as Phaser.Physics.Arcade.StaticBody;
+            body.setCircle(body.width * 0.5);
+            body.enable = true;
+            
+            // move x a random amount
+            // next coin will be spaced away from the previous one
+            x += coin.width * 1.5;
+        }
     }
 }
