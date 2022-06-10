@@ -1,3 +1,4 @@
+import SceneKeys from "~/consts/SceneKeys";
 /**
  * Phaser game objects do not have children
  * But Phaser container do
@@ -7,11 +8,19 @@ import Phaser from "phaser";
 import TextureKeys from "~/consts/TextureKey";
 import AnimationKeys from "~/consts/AnimationKeys";
 
+enum MouseState {
+    Running,
+    Killed,
+    Dead,
+}
+
 // Phaser.GameObjects.Container instead of Phaser.Scene
 export default class RocketMouse extends Phaser.GameObjects.Container {
     private mouse: Phaser.GameObjects.Sprite;
     private flames: Phaser.GameObjects.Sprite;
     private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+
+    private mouseState = MouseState.Running;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y);
@@ -60,34 +69,58 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     }
 
     kill() {
-        this.mouse.play(AnimationKeys.RocketMouseDead)
-        const body = this.body as Phaser.Physics.Arcade.Body
-        body.setAccelerationY(0)
-        body.setVelocity(1000, 0)
-        this.enableJetpack(false)
+        // State Machine
+        if (this.mouseState !== MouseState.Running) {
+            return;
+        }
+        this.mouseState = MouseState.Killed;
+
+        this.mouse.play(AnimationKeys.RocketMouseDead);
+        const body = this.body as Phaser.Physics.Arcade.Body;
+        body.setAccelerationY(0);
+        body.setVelocity(1000, 0);
+        this.enableJetpack(false);
     }
 
     // A Container does not normally implement a preUpdate() method but it will get called if we create one.
+    // you can call it manually by update() like TypeScript Engine
     preUpdate() {
         const body = this.body as Phaser.Physics.Arcade.Body;
+        switch (this.mouseState) {
+            case MouseState.Running: {
+                if (this.cursors.space?.isDown) {
+                    body.setAccelerationY(-600);
+                    this.enableJetpack(true);
 
-        if (this.cursors.space?.isDown) {
-            body.setAccelerationY(-600);
-            this.enableJetpack(true);
+                    // play the fly animation - if already played, it will be ignored
+                    this.mouse.play(AnimationKeys.RocketMouseFly, true);
+                } else {
+                    body.setAccelerationY(0);
+                    this.enableJetpack(false);
+                }
 
-            // play the fly animation - if already played, it will be ignored
-            this.mouse.play(AnimationKeys.RocketMouseFly, true);
-        } else {
-            body.setAccelerationY(0);
-            this.enableJetpack(false);
-        }
+                // check if touch the ground
+                if (body.blocked.down) {
+                    // play run
+                    this.mouse.play(AnimationKeys.RocketMouseRun, true);
+                } else if (body.velocity.y > 0) {
+                    this.mouse.play(AnimationKeys.RocketMouseFall, true);
+                }
+                break;
+            }
+            case MouseState.Killed: {
+                body.velocity.x *= 0.99;
+                if (body.velocity.x <= 5) {
+                    this.mouseState = MouseState.Dead;
+                }
+                break;
+            }
+            case MouseState.Dead: {
+                body.setVelocity(0, 0);
 
-        // check if touch the ground
-        if (body.blocked.down) {
-            // play run
-            this.mouse.play(AnimationKeys.RocketMouseRun, true);
-        } else if (body.velocity.y > 0) {
-            this.mouse.play(AnimationKeys.RocketMouseFall, true);
+                if (!this.scene.scene.isActive(SceneKeys.GameOver)) this.scene.scene.run(SceneKeys.GameOver);
+                break;
+            }
         }
     }
 }

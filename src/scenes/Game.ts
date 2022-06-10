@@ -149,6 +149,7 @@ export default class Game extends Phaser.Scene {
         this.wrapLaserObstacle();
         // scroll the background based on camera' scrollX
         this.background.setTilePosition(this.cameras.main.scrollX);
+        
     }
 
     // determine when the mouseHole scrolls off the left side of the screen
