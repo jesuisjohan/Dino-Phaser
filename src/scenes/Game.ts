@@ -139,6 +139,7 @@ export default class Game extends Phaser.Scene {
         this.physics.add.overlap(this.laserObstacle, mouse, this.handleOverlapLaser, undefined, this);
 
         this.listenMouseDead()
+        this.listenRestart()
     }
     /**
      * update function
@@ -260,6 +261,13 @@ export default class Game extends Phaser.Scene {
     private listenMouseDead() {
         eventsCenter.once('dead', () => {
             this.scene.run(SceneKeys.GameOver)
+        })
+    }
+
+    private listenRestart() {
+        eventsCenter.once('gameOver', () => {
+            this.scene.stop(SceneKeys.GameOver)
+            this.scene.restart()
         })
     }
 }

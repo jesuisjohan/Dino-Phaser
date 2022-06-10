@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import SceneKeys from "~/consts/SceneKeys";
+import eventsCenter from "~/events/EventsCenter";
 
 export default class GameOver extends Phaser.Scene {
     constructor() {
@@ -28,11 +29,17 @@ export default class GameOver extends Phaser.Scene {
 
         // listen for the space bar getting pressed once
         this.input.keyboard.once('keydown-SPACE', () => {
+            /*
+            // 1. call directly
             // stop game over scene
             this.scene.stop(SceneKeys.GameOver)
             // stop and start - restart - the game scene
             this.scene.stop(SceneKeys.Game)
             this.scene.start(SceneKeys.Game)
+            */
+
+            // 2. call via Game Scene
+            eventsCenter.emit('gameOver')
         })
     }
 }
