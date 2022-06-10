@@ -98,7 +98,7 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
                     this.mouse.play(AnimationKeys.RocketMouseFly, true);
                 }
                 else if (this.cursors.down?.isDown) {
-                    body.setAccelerationY(2000);
+                    body.setAccelerationY(4000);
                     this.enableJetpack(false);
                 } 
                 else {
