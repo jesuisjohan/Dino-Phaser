@@ -1,0 +1,28 @@
+{"frames": {
+
+"tile000.png":
+{
+	"frame": {"x":0,"y":0,"w":118,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":94},
+	"sourceSize": {"w":118,"h":94}
+},
+"tile001.png":
+{
+	"frame": {"x":118,"y":0,"w":118,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":94},
+	"sourceSize": {"w":118,"h":94}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "dino-down.png",
+	"format": "RGBA8888",
+	"size": {"w":236,"h":94},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8f2d0483f7eb73957c20ea6cd1348ab4:7a6d533596e93c99b3cc288ab9918075:3689446926ed6f43f5e297eda49a4c35$"
+}
+}
