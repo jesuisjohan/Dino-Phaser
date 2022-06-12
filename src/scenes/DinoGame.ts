@@ -7,7 +7,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     create() {
-
+        const {width, height} = this.scale
     }
 
     update() {
