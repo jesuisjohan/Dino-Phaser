@@ -132,5 +132,7 @@ export default class DinoPreloader extends Phaser.Scene {
             frameRate: 5,
             repeat: -1,
         })
+
+        this.scene.start(SceneKeys.Game)
     }
 }
