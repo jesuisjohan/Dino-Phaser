@@ -4,6 +4,14 @@ import DinoSceneKeys from "~/consts/DinoSceneKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
 import DinoTextureKeys from "~/consts/DinoTextureKeys";
 
+enum DinoState {
+    Idle,
+    Run,
+    Jump,
+    Duck,
+    Dead,
+}
+
 export default class DinoGame extends Phaser.Scene {
     // audio
     private jumpSound!: Phaser.Sound.BaseSound;
@@ -20,6 +28,8 @@ export default class DinoGame extends Phaser.Scene {
     private gameSpeed = 10;
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+
+    private dinoState = DinoState.Idle;
 
     constructor() {
         super(DinoSceneKeys.Game);
@@ -49,28 +59,46 @@ export default class DinoGame extends Phaser.Scene {
             .setBodySize(88, 92)
             .setDepth(1)
             .setOrigin(0, 1);
-        this.physics.world.setBounds(0,0, Number.MAX_SAFE_INTEGER, height - 50)
+        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     handleInputs() {
         const body = this.dino.body as Phaser.Physics.Arcade.Body;
+        const vy = 1600
         if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            if (!body.blocked.down || body.velocity.x > 0) return;
+            if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return;
             this.jumpSound.play();
-            body.setVelocityY(-1600);
-            // body.offset.y = 0
+            body.setVelocityY(-vy);
             console.log("jump");
             this.dino.anims.stop();
         } else if (this.cursors.down?.isDown) {
-            body.setVelocityY(1600);
+            body.setVelocityY(vy);
             this.dino.play(DinoAnimationKeys.DinoDown, true);
             body.setSize(118, 58);
-            body.offset.y = 34
+            body.offset.y = 34;
         } else {
             this.dino.play(DinoAnimationKeys.DinoRun, true);
             body.setSize(88, 92);
-            body.offset.y = 0
+            body.offset.y = 0;
+        }
+
+        switch (this.dinoState) {
+            case DinoState.Idle: {
+                break;
+            }
+            case DinoState.Run: {
+                break;
+            }
+            case DinoState.Jump: {
+                break;
+            }
+            case DinoState.Duck: {
+                break;
+            }
+            case DinoState.Dead: {
+                break;
+            }
         }
     }
 
