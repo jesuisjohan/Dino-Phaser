@@ -77,7 +77,7 @@ export default class Preloader extends Phaser.Scene {
             key: AnimationKeys.RocketFlamesOn,
             frames: this.anims.generateFrameNames(TextureKeys.RocketMouse, {
                 start: 1,
-                end: 1,
+                end: 2,
                 prefix: "flame",
                 suffix: ".png",
             }),
