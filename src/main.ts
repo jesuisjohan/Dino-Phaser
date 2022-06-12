@@ -12,7 +12,7 @@ import DinoGameOver from "./scenes/DinoGameOver";
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: 1000, // 800,
-    height: 340, //640,
+    height: 640, //640,
     pixelArt: true,
     transparent: true, // light - true, dark - false
     physics: {
