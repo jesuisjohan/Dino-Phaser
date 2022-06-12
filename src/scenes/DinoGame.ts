@@ -1,6 +1,8 @@
+import DinoAnimationKeys from "~/consts/DinoAnimationKeys";
 import Phaser from "phaser";
-import SceneKeys from "~/consts/SceneKeys";
+import DinoSceneKeys from "~/consts/DinoSceneKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
+import DinoTextureKeys from "~/consts/DinoTextureKeys";
 
 export default class DinoGame extends Phaser.Scene {
     // audio
@@ -9,18 +11,23 @@ export default class DinoGame extends Phaser.Scene {
     private reachSound!: Phaser.Sound.BaseSound;
 
     private ground!: Phaser.GameObjects.TileSprite;
+    private dino!: Phaser.GameObjects.Sprite;
 
     private scoreLabel!: Phaser.GameObjects.Text;
     private highScoreLabel!: Phaser.GameObjects.Text;
 
     private score = 0;
+    private gameSpeed = 10;
+
+    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
 
     constructor() {
-        super(SceneKeys.Game);
+        super(DinoSceneKeys.Game);
     }
 
     init() {
         this.score = 0;
+        this.gameSpeed = 10;
     }
 
     create() {
@@ -31,17 +38,33 @@ export default class DinoGame extends Phaser.Scene {
         this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 0.2 });
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 0.2 });
 
-        // text
-        this.scoreLabel = this.add
-            .text(width, 0, "00000", { fill: "#535353", font: "900 35px Courier", resolution: 5 })
-            .setOrigin(1, 0)
-            .setAlpha(0);
+        // ground
 
-        this.highScoreLabel = this.add
-            .text(0, 0, "00000", { fill: "#535353", font: "900 35px Courier", resolution: 5 })
-            .setOrigin(1, 0)
-            .setAlpha(0);
+        this.ground = this.add.tileSprite(0, height, width, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
+        this.dino = this.physics.add
+            .sprite(1, height, DinoTextureKeys.Dino)
+            .play(DinoAnimationKeys.DinoRun)
+            .setCollideWorldBounds(true)
+            .setGravityY(5000)
+            .setBodySize(88, 92)
+            .setDepth(1)
+            .setOrigin(0, 1);
+
+        this.cursors = this.input.keyboard.createCursorKeys();
     }
 
-    update() {}
+    handleInputs() {
+        const body = this.dino.body as Phaser.Physics.Arcade.Body;
+        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+            if (!body.blocked.down || body.velocity.x > 0) return;
+
+            body.setVelocityY(-1600);
+            console.log("jump");
+        }
+    }
+
+    update() {
+        this.ground.tilePositionX += this.gameSpeed;
+        this.handleInputs();
+    }
 }
