@@ -136,31 +136,33 @@ export default class DinoGame extends Phaser.Scene {
         if (this.startTrigger.y == 10) {
             this.startTrigger.setOrigin(0, 1);
             startTriggerBody.reset(0, height); // bring trigger start to foot of dino for else branch
-        } else {
-            this.startTrigger.setActive(false);
-            const body = this.dino.body as Phaser.Physics.Arcade.Body;
-            const startEvent = this.time.addEvent({
-                delay: 1000 / 60,
-                loop: true,
-                callbackScope: this,
-                callback: () => {
-                    body.setVelocityX(80);
-                    this.dino.play(DinoAnimationKeys.DinoRun, true);
-
-                    if (this.ground.width < width) {
-                        console.log("grow");
-                        this.ground.width += 17 * 2;
-                    }
-
-                    if (this.ground.width >= 1000) {
-                        this.ground.width = width;
-                        this.isGameRunning = true;
-                        body.setVelocityX(0);
-                        startEvent.remove();
-                    }
-                },
-            });
+            return;
         }
+
+        this.startTrigger.setActive(false);
+        const body = this.dino.body as Phaser.Physics.Arcade.Body;
+
+        const startEvent = this.time.addEvent({
+            delay: 1000 / 60,
+            loop: true,
+            callbackScope: this,
+            callback: () => {
+                body.setVelocityX(80);
+                this.dino.play(DinoAnimationKeys.DinoRun, true);
+
+                if (this.ground.width < width) {
+                    console.log("grow");
+                    this.ground.width += 17 * 2;
+                }
+
+                if (this.ground.width >= 1000) {
+                    this.ground.width = width;
+                    this.isGameRunning = true;
+                    body.setVelocityX(0);
+                    startEvent.remove();
+                }
+            },
+        });
     }
 
     update() {
