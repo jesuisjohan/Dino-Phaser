@@ -301,13 +301,13 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     wrapClouds() {
-        // this.clouds.getChildren().forEach((cloud) => {
-        //     const body = cloud.body as Phaser.Physics.Arcade.Body;
-        //     const rightEdge = body.x + body.width;
-        //     if (rightEdge < 0) {
-        //         const { width, height } = this.scale;
-        //         body.position.x = width + 30;
-        //     }
-        // });
+        this.clouds.getChildren().forEach((object) => {
+            const cloud = object as Phaser.GameObjects.Image;
+            const rightEdge = cloud.x + cloud.width;
+            if (rightEdge < 0) {
+                const { width, height } = this.scale;
+                cloud.x = width + 30;
+            }
+        });
     }
 }
