@@ -1,5 +1,5 @@
 import DinoAnimationKeys from "~/consts/DinoAnimationKeys";
-import Phaser, { HEADLESS } from "phaser";
+import Phaser from "phaser";
 import DinoSceneKeys from "~/consts/DinoSceneKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
 import DinoTextureKeys from "~/consts/DinoTextureKeys";
@@ -49,7 +49,6 @@ export default class DinoGame extends Phaser.Scene {
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 0.2 });
 
         // ground
-
         this.ground = this.add.tileSprite(0, height, width, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
         this.dino = this.physics.add
             .sprite(1, height, DinoTextureKeys.Dino)
@@ -59,13 +58,32 @@ export default class DinoGame extends Phaser.Scene {
             .setBodySize(88, 92)
             .setDepth(1)
             .setOrigin(0, 1);
-        // this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
+
+        this.scoreLabel = this.add
+            .text(width, 0, "00000", {
+                color: "#535353",
+                font: "900 35px Courier",
+                resolution: 5,
+            })
+            .setOrigin(1, 0)
+            .setAlpha(1);
+
+        this.highScoreLabel = this.add
+            .text(0, 0, "00000", {
+                color: "#535353",
+                font: "900 35px Courier",
+                resolution: 5,
+            })
+            .setOrigin(0, 0)
+            .setAlpha(1);
+
+        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     handleInputs() {
         const body = this.dino.body as Phaser.Physics.Arcade.Body;
-        const vy = 1600
+        const vy = 1600;
         if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
             if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return;
             this.jumpSound.play();
@@ -105,19 +123,5 @@ export default class DinoGame extends Phaser.Scene {
     update() {
         this.ground.tilePositionX += this.gameSpeed;
         this.handleInputs();
-=======
-import Phaser from "phaser";
-import SceneKeys from "~/consts/SceneKeys";
-
-export default class DinoGame extends Phaser.Scene {
-    constructor() {
-        super(SceneKeys.Game);
-    }
-
-    create() {
-
-    }
-
-    update() {
     }
 }

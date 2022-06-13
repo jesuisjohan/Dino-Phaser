@@ -67,7 +67,7 @@ export default class DinoPreloader extends Phaser.Scene {
         this.anims.create({
             key: DinoAnimationKeys.DinoRun,
             frames: this.anims.generateFrameNames(DinoTextureKeys.Dino, {
-                start: 1,
+                start: 3,
                 end: 4,
                 prefix: "dino_run",
                 suffix: ".png",
