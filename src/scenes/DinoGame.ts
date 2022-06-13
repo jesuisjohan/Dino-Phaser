@@ -165,8 +165,20 @@ export default class DinoGame extends Phaser.Scene {
         });
     }
 
+    pressSpace2Start() {
+        const body = this.dino.body as Phaser.Physics.Arcade.Body;
+        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+            this.jumpSound.play();
+            body.setVelocityY(-1600);
+            console.log("start game");
+        }
+    }
+
     update() {
-        // if (!this.isGameRunning) return;
+        if (!this.isGameRunning) {
+            this.pressSpace2Start();
+            return;
+        }
         this.ground.tilePositionX += this.gameSpeed;
         this.handleInputs();
     }
