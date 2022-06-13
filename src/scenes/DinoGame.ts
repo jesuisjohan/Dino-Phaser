@@ -48,6 +48,8 @@ export default class DinoGame extends Phaser.Scene {
         this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 0.2 });
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 0.2 });
 
+        const startTrigger= this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
+
         // ground
         this.ground = this.add.tileSprite(0, height, width, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
         this.dino = this.physics.add
