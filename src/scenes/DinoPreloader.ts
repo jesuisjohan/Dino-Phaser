@@ -1,12 +1,12 @@
 import Phaser from "phaser";
-import SceneKeys from "~/consts/SceneKeys";
+import DinoSceneKeys from "~/consts/DinoSceneKeys";
 import DinoTextureKeys from "~/consts/DinoTextureKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
 import DinoAnimationKeys from "~/consts/DinoAnimationKeys";
 
 export default class DinoPreloader extends Phaser.Scene {
     constructor() {
-        super(SceneKeys.Preloader);
+        super(DinoSceneKeys.Preloader);
     }
 
     preload() {
@@ -72,7 +72,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 prefix: "dino_run",
                 suffix: ".png",
             }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: -1,
         });
 
@@ -84,7 +84,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 prefix: "dino_down",
                 suffix: ".png",
             }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: -1,
         });
 
@@ -99,7 +99,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 zeroPad: 3,
                 suffix: ".png"
             }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: -1,
         })
 
@@ -114,7 +114,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 zeroPad: 3,
                 suffix: ".png"
             }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: -1,
         })
 
@@ -129,10 +129,11 @@ export default class DinoPreloader extends Phaser.Scene {
                 zeroPad: 3,
                 suffix: ".png"
             }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: -1,
         })
 
-        this.scene.start(SceneKeys.Game)
+        this.scene.start(DinoSceneKeys.Game)
+
     }
 }
