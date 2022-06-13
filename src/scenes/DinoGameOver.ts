@@ -18,7 +18,7 @@ export default class DinoGameOver extends Phaser.Scene {
         gameOverScreen.add([gameOverText, restart]);
 
         restart.on('pointerdown', () => {
-            alert('restart')
+            this.scene.start(DinoSceneKeys.Game)
         })
     }
 }

@@ -45,10 +45,15 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     init() {
-        this.score = 0;
-        this.gameSpeed = 5;
-        this.isGameRunning = false;
-        this.respawnTime = 0;
+        // const body = this.dino.body as Phaser.Physics.Arcade.Body
+        // body.setVelocityY(0)
+        // body.setSize(88,92)
+        // body.offset.y = 0
+        this.physics.resume();
+        // this.obstacles.clear(true, true)
+        // this.isGameRunning = true;
+        this.anims.resumeAll();
+        this.hasHitSoundPlayed = false;
     }
 
     create() {
@@ -62,7 +67,9 @@ export default class DinoGame extends Phaser.Scene {
         this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
 
         // ground
-        this.ground = this.add.tileSprite(0, height, 88, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
+        this.ground = this.add
+            .tileSprite(0, height, 88, 26, DinoTextureKeys.Ground)
+            .setOrigin(0, 1);
         this.dino = this.physics.add
             .sprite(20, height, DinoTextureKeys.Dino)
             .play(DinoAnimationKeys.DinoIdle)
