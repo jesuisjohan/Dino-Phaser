@@ -18,6 +18,8 @@ export default class DinoGame extends Phaser.Scene {
     private hitSound!: Phaser.Sound.BaseSound;
     private reachSound!: Phaser.Sound.BaseSound;
 
+    private hasHitSoundPlayed = false;
+
     private ground!: Phaser.GameObjects.TileSprite;
     private dino!: Phaser.GameObjects.Sprite;
     private startTrigger!: Phaser.GameObjects.Sprite;
@@ -53,23 +55,23 @@ export default class DinoGame extends Phaser.Scene {
         const { width, height } = this.scale;
 
         // audio
-        this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 0.2 });
-        this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 0.2 });
-        this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 0.2 });
+        this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 1 });
+        this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 1 });
+        this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 1 });
 
         this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
 
         // ground
         this.ground = this.add.tileSprite(0, height, 88, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
         this.dino = this.physics.add
-            .sprite(1, height, DinoTextureKeys.Dino)
+            .sprite(20, height, DinoTextureKeys.Dino)
             .play(DinoAnimationKeys.DinoIdle)
             .setCollideWorldBounds(true)
             .setGravityY(5000)
             .setBodySize(88, 92)
             .setDepth(1)
             .setOrigin(0, 1);
-        
+
         this.scoreLabel = this.add
             .text(width, 0, "00000", {
                 color: "#535353",
@@ -77,7 +79,7 @@ export default class DinoGame extends Phaser.Scene {
                 resolution: 5,
             })
             .setOrigin(1, 0)
-            .setAlpha(0);
+            .setAlpha(1);
 
         this.highScoreLabel = this.add
             .text(0, 0, "00000", {
@@ -86,7 +88,7 @@ export default class DinoGame extends Phaser.Scene {
                 resolution: 5,
             })
             .setOrigin(0, 0)
-            .setAlpha(0);
+            .setAlpha(1);
 
         this.clouds = this.add.group();
         this.clouds.addMultiple([
@@ -101,22 +103,7 @@ export default class DinoGame extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.dino, this.startTrigger, this.handleStartTrigger, undefined, this);
-
-        this.physics.add.collider(
-            this.dino,
-            this.obstacles,
-            () => {
-                this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20;
-                const scoreNum = parseInt(this.scoreLabel.text);
-                const highScoreNum = parseInt(this.highScoreLabel.text);
-                const newScore = scoreNum > highScoreNum ? scoreNum : highScoreNum;
-
-                this.highScoreLabel.text = newScore.toString();
-                this.highScoreLabel.setAlpha(1);
-            },
-            undefined,
-            this
-        );
+        this.physics.add.collider(this.dino, this.obstacles, this.handleObstaclesCollision, undefined, this);
 
         // HUONG DAN CUA MAY ANH, CAN PHAI CHIA NHO RA DE DE LAM
 
@@ -132,21 +119,38 @@ export default class DinoGame extends Phaser.Scene {
     //     this.createBooksheves()
     // }
 
+    handleObstaclesCollision() {
+        this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20;
+        const scoreNum = parseInt(this.scoreLabel.text);
+        const highScoreNum = parseInt(this.highScoreLabel.text);
+        const newScore = scoreNum > highScoreNum ? scoreNum : highScoreNum;
+        this.highScoreLabel.setText(newScore.toString());
+        this.highScoreLabel.setAlpha(1);
+        this.physics.pause;
+        this.isGameRunning = false;
+        this.anims.pauseAll();
+        this.dino.play(DinoAnimationKeys.DinoHurt, true);
+        this.respawnTime = 0;
+        this.gameSpeed = 5;
+        this.score = 0;
+        if (!this.hitSound.isPlaying && !this.hasHitSoundPlayed) {
+            this.hitSound.play();
+            this.hasHitSoundPlayed = true;
+        }
+    }
+
     handleInputs() {
         const body = this.dino.body as Phaser.Physics.Arcade.Body;
         const vy = 1600;
         if (this.cursors.down?.isDown) {
-            console.log("press down");
             body.setVelocityY(vy);
             this.dino.play(DinoAnimationKeys.DinoDown, true);
             body.setSize(118, 58);
             body.offset.y = 34;
         } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            console.log("press up");
             if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return;
             this.jumpSound.play();
             body.setVelocityY(-vy);
-            console.log("jump");
             this.dino.anims.stop();
         } else {
             this.dino.play(DinoAnimationKeys.DinoRun, true);
@@ -196,12 +200,7 @@ export default class DinoGame extends Phaser.Scene {
             callback: () => {
                 body.setVelocityX(80);
                 this.dino.play(DinoAnimationKeys.DinoRun, true);
-
-                if (this.ground.width < width) {
-                    console.log("grow");
-                    this.ground.width += 5;
-                }
-
+                if (this.ground.width < width) this.ground.width += 5;
                 if (this.ground.width >= 1000) {
                     this.ground.width = width;
                     this.isGameRunning = true;
@@ -218,20 +217,27 @@ export default class DinoGame extends Phaser.Scene {
         if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
             this.jumpSound.play();
             body.setVelocityY(-1600);
-            console.log("start game");
         }
     }
 
     handleScore() {
-        const temp = this.time.addEvent({
-            delay: 1000/10,
+        this.time.addEvent({
+            delay: 1000 / 10,
             loop: true,
             callbackScope: this,
             callback: () => {
-                this.score++
-                this.scoreLabel.text = `${this.score}`
-            }
-        })   
+                if (!this.isGameRunning) return;
+                this.score++;
+                this.gameSpeed += 0.01;
+                if (this.score % 100 == 0) {
+                    this.reachSound.play();
+                    this.tweens.add({ targets: this.scoreLabel, duration: 100, repeat: 3, alpha: 0, yoyo: true });
+                }
+                const score = Array.from(this.score.toString(), Number);
+                for (let i = 0; i < 5 - this.score.toString().length; i++) score.unshift(0);
+                this.scoreLabel.setText(score.join(""));
+            },
+        });
     }
 
     /**
@@ -246,7 +252,7 @@ export default class DinoGame extends Phaser.Scene {
     spawnObstacles() {
         const { width, height } = this.scale;
         const numObstacles = this.getRandomInt(6) + 1;
-        const distance = Phaser.Math.Between(600, 900);
+        const distance = Phaser.Math.Between(300, 450);
 
         let obstacle: Phaser.Physics.Arcade.Sprite;
         if (numObstacles > 5) {
