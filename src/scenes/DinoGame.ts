@@ -59,7 +59,7 @@ export default class DinoGame extends Phaser.Scene {
             .setBodySize(88, 92)
             .setDepth(1)
             .setOrigin(0, 1);
-        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
+        // this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
