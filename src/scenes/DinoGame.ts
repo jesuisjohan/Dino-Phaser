@@ -139,6 +139,7 @@ export default class DinoGame extends Phaser.Scene {
             this.hitSound.play();
             this.hasHitSoundPlayed = true;
         }
+        this.scene.run(DinoSceneKeys.GameOver);
     }
 
     handleInputs() {
