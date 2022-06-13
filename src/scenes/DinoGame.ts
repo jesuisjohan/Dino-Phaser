@@ -264,8 +264,8 @@ export default class DinoGame extends Phaser.Scene {
                     break;
                 }
             }
-            obstacle = this.obstacles.create(width + distance, height - cactusHeight + 30, textureKey)
-            const obstacleBody = obstacle.body as Phaser.Physics.Arcade.StaticBody;
+            obstacle = this.obstacles.create(width + distance, height - cactusHeight + 34, textureKey)
+            // const obstacleBody = obstacle.body as Phaser.Physics.Arcade.StaticBody;
         }
         const obstacleBody = obstacle.body as Phaser.Physics.Arcade.Body;
         obstacleBody.setImmovable();
