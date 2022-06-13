@@ -1,10 +1,5 @@
 import Phaser from "phaser";
 
-// import HelloWorldScene from './scenes/HelloWorldScene'
-
-// import Preloader from "./scenes/Preloader";
-// import Game from "./scenes/Game";
-// import GameOver from "./scenes/GameOver";
 import DinoPreloader from "./scenes/DinoPreloader";
 import DinoGame from "./scenes/DinoGame";
 import DinoGameOver from "./scenes/DinoGameOver";

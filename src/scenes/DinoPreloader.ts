@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-// import SceneKeys from "~/consts/SceneKeys";
 import DinoSceneKeys from "~/consts/DinoSceneKeys";
 import DinoTextureKeys from "~/consts/DinoTextureKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
@@ -135,5 +134,6 @@ export default class DinoPreloader extends Phaser.Scene {
         })
 
         this.scene.start(DinoSceneKeys.Game)
+
     }
 }

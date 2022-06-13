@@ -105,5 +105,19 @@ export default class DinoGame extends Phaser.Scene {
     update() {
         this.ground.tilePositionX += this.gameSpeed;
         this.handleInputs();
+=======
+import Phaser from "phaser";
+import SceneKeys from "~/consts/SceneKeys";
+
+export default class DinoGame extends Phaser.Scene {
+    constructor() {
+        super(SceneKeys.Game);
+    }
+
+    create() {
+
+    }
+
+    update() {
     }
 }
