@@ -90,17 +90,19 @@ export default class DinoGame extends Phaser.Scene {
     handleInputs() {
         const body = this.dino.body as Phaser.Physics.Arcade.Body;
         const vy = 1600;
-        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+        if (this.cursors.down?.isDown) {
+            console.log("press down");
+            body.setVelocityY(vy);
+            this.dino.play(DinoAnimationKeys.DinoDown, true);
+            body.setSize(118, 58);
+            body.offset.y = 34;
+        } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+            console.log("press up");
             if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return;
             this.jumpSound.play();
             body.setVelocityY(-vy);
             console.log("jump");
             this.dino.anims.stop();
-        } else if (this.cursors.down?.isDown) {
-            body.setVelocityY(vy);
-            this.dino.play(DinoAnimationKeys.DinoDown, true);
-            body.setSize(118, 58);
-            body.offset.y = 34;
         } else {
             this.dino.play(DinoAnimationKeys.DinoRun, true);
             body.setSize(88, 92);
@@ -152,7 +154,7 @@ export default class DinoGame extends Phaser.Scene {
 
                 if (this.ground.width < width) {
                     console.log("grow");
-                    this.ground.width += 17 * 2;
+                    this.ground.width += 5;
                 }
 
                 if (this.ground.width >= 1000) {
