@@ -104,6 +104,7 @@ export default class DinoGame extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.dino, this.startTrigger, this.handleStartTrigger, undefined, this);
         this.physics.add.collider(this.dino, this.obstacles, this.handleObstaclesCollision, undefined, this);
+        this.handleScore()
 
         // HUONG DAN CUA MAY ANH, CAN PHAI CHIA NHO RA DE DE LAM
 
