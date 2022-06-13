@@ -87,8 +87,8 @@ export default class DinoGame extends Phaser.Scene {
                 font: "900 35px Courier",
                 resolution: 5,
             })
-            .setOrigin(0, 0)
-            .setAlpha(1);
+            .setOrigin(1, 0)
+            .setAlpha(0);
 
         this.clouds = this.add.group();
         this.clouds.addMultiple([
@@ -104,7 +104,7 @@ export default class DinoGame extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.dino, this.startTrigger, this.handleStartTrigger, undefined, this);
         this.physics.add.collider(this.dino, this.obstacles, this.handleObstaclesCollision, undefined, this);
-        this.handleScore()
+        this.handleScore();
 
         // HUONG DAN CUA MAY ANH, CAN PHAI CHIA NHO RA DE DE LAM
 
@@ -125,7 +125,8 @@ export default class DinoGame extends Phaser.Scene {
         const scoreNum = parseInt(this.scoreLabel.text);
         const highScoreNum = parseInt(this.highScoreLabel.text);
         const newScore = scoreNum > highScoreNum ? scoreNum : highScoreNum;
-        this.highScoreLabel.setText(newScore.toString());
+
+        this.highScoreLabel.setText(this.zerosPaddingScore(newScore, 5));
         this.highScoreLabel.setAlpha(1);
         this.physics.pause;
         this.isGameRunning = false;
@@ -232,13 +233,21 @@ export default class DinoGame extends Phaser.Scene {
                 this.gameSpeed += 0.01;
                 if (this.score % 100 == 0) {
                     this.reachSound.play();
-                    this.tweens.add({ targets: this.scoreLabel, duration: 100, repeat: 3, alpha: 0, yoyo: true });
+                    this.flashScore();
                 }
-                const score = Array.from(this.score.toString(), Number);
-                for (let i = 0; i < 5 - this.score.toString().length; i++) score.unshift(0);
-                this.scoreLabel.setText(score.join(""));
+                this.scoreLabel.setText(this.zerosPaddingScore(this.score, 5));
             },
         });
+    }
+
+    zerosPaddingScore(score: number, width: number) {
+        const numArr = Array.from(score.toString(), Number);
+        for (let i = 0; i < width - score.toString().length; i++) numArr.unshift(0);
+        return numArr.join("");
+    }
+
+    flashScore() {
+        this.tweens.add({ targets: this.scoreLabel, duration: 100, repeat: 3, alpha: 0, yoyo: true });
     }
 
     /**
@@ -257,9 +266,13 @@ export default class DinoGame extends Phaser.Scene {
 
         let obstacle: Phaser.Physics.Arcade.Sprite;
         if (numObstacles > 5) {
-            const enemyHeight = [20, 50];
+            const enemyHeight = [20, 70, 100];
             obstacle = this.obstacles
-                .create(width + distance, height - enemyHeight[this.getRandomInt(2)], DinoTextureKeys.EnemyBird)
+                .create(
+                    width + distance,
+                    height - enemyHeight[this.getRandomInt(enemyHeight.length)],
+                    DinoTextureKeys.EnemyBird
+                )
                 .setOrigin(0, 1);
             obstacle.play(DinoAnimationKeys.EnemyBird, true);
         } else {
