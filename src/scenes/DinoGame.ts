@@ -102,8 +102,8 @@ export default class DinoGame extends Phaser.Scene {
 
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
-        this.physics.add.overlap(this.dino, this.startTrigger, this.handleStartTrigger, undefined, this);
-        this.physics.add.collider(this.dino, this.obstacles, this.handleObstaclesCollision, undefined, this);
+        this.physics.add.overlap(this.dino, this.startTrigger, this.handleStart, undefined, this);
+        this.physics.add.collider(this.dino, this.obstacles, this.handleLose, undefined, this);
         this.handleScore();
 
         // HUONG DAN CUA MAY ANH, CAN PHAI CHIA NHO RA DE DE LAM
@@ -120,7 +120,7 @@ export default class DinoGame extends Phaser.Scene {
     //     this.createBooksheves()
     // }
 
-    handleObstaclesCollision() {
+    handleLose() {
         this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20;
         const scoreNum = parseInt(this.scoreLabel.text);
         const highScoreNum = parseInt(this.highScoreLabel.text);
@@ -183,7 +183,7 @@ export default class DinoGame extends Phaser.Scene {
      * Turn off start trigger when start the game
      * @returns None
      */
-    handleStartTrigger() {
+    handleStart() {
         const { width, height } = this.scale;
         const startTriggerBody = this.startTrigger.body as Phaser.Physics.Arcade.Body;
         if (this.startTrigger.y == 10) {
@@ -234,6 +234,8 @@ export default class DinoGame extends Phaser.Scene {
                 if (this.score % 100 == 0) {
                     this.reachSound.play();
                     this.flashScore();
+                }
+                if (this.score % 500) {
                 }
                 this.scoreLabel.setText(this.zerosPaddingScore(this.score, 5));
             },
@@ -340,7 +342,7 @@ export default class DinoGame extends Phaser.Scene {
 
     update(t: number, dt: number) {
         if (!this.isGameRunning) {
-            this.pressSpace2Start();
+            if (this.highScoreLabel.alpha == 0) this.pressSpace2Start();
             return;
         }
         this.ground.tilePositionX += this.gameSpeed;
