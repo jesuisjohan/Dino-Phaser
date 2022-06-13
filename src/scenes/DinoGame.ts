@@ -26,12 +26,17 @@ export default class DinoGame extends Phaser.Scene {
     private highScoreLabel!: Phaser.GameObjects.Text;
 
     private score = 0;
-    private gameSpeed = 10;
+    private gameSpeed = 5;
     private isGameRunning = false;
+    private respawnTime = 0;
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
 
     private dinoState = DinoState.Idle;
+
+    private clouds!: Phaser.GameObjects.Group;
+
+    private obstacles!: Phaser.Physics.Arcade.Group;
 
     constructor() {
         super(DinoSceneKeys.Game);
@@ -39,8 +44,9 @@ export default class DinoGame extends Phaser.Scene {
 
     init() {
         this.score = 0;
-        this.gameSpeed = 10;
+        this.gameSpeed = 5;
         this.isGameRunning = false;
+        this.respawnTime = 0;
     }
 
     create() {
@@ -71,7 +77,7 @@ export default class DinoGame extends Phaser.Scene {
                 resolution: 5,
             })
             .setOrigin(1, 0)
-            .setAlpha(1);
+            .setAlpha(0);
 
         this.highScoreLabel = this.add
             .text(0, 0, "00000", {
@@ -80,11 +86,37 @@ export default class DinoGame extends Phaser.Scene {
                 resolution: 5,
             })
             .setOrigin(0, 0)
-            .setAlpha(1);
+            .setAlpha(0);
+
+        this.clouds = this.add.group();
+        this.clouds.addMultiple([
+            this.add.image(width / 2, 170, DinoTextureKeys.Cloud),
+            this.add.image(width - 80, 80, DinoTextureKeys.Cloud),
+            this.add.image(width / 1.3, 100, DinoTextureKeys.Cloud),
+        ]);
+        this.clouds.setAlpha(0);
+
+        this.obstacles = this.physics.add.group();
 
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.dino, this.startTrigger, this.handleStartTrigger, undefined, this);
+
+        this.physics.add.collider(
+            this.dino,
+            this.obstacles,
+            () => {
+                this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20;
+                const scoreNum = parseInt(this.scoreLabel.text);
+                const highScoreNum = parseInt(this.highScoreLabel.text);
+                const newScore = scoreNum > highScoreNum ? scoreNum : highScoreNum;
+
+                this.highScoreLabel.text = newScore.toString();
+                this.highScoreLabel.setAlpha(1);
+            },
+            undefined,
+            this
+        );
     }
 
     handleInputs() {
@@ -161,6 +193,7 @@ export default class DinoGame extends Phaser.Scene {
                     this.ground.width = width;
                     this.isGameRunning = true;
                     body.setVelocityX(0);
+                    this.clouds.setAlpha(1);
                     startEvent.remove();
                 }
             },
@@ -175,13 +208,106 @@ export default class DinoGame extends Phaser.Scene {
             console.log("start game");
         }
     }
+    /**
+     * get random integer
+     * @param max not include this max
+     * @returns all numbers less than max
+     */
+    getRandomInt(max: number) {
+        return Math.floor(Math.random() * max);
+    }
 
-    update() {
+    spawnObstacles() {
+        const { width, height } = this.scale;
+        const numObstacles = this.getRandomInt(6) + 1;
+        const distance = Phaser.Math.Between(600, 900);
+
+        let obstacle: Phaser.Physics.Arcade.Sprite;
+        if (numObstacles > 5) {
+            const enemyHeight = [20, 50];
+            obstacle = this.obstacles
+                .create(width + distance, height - enemyHeight[this.getRandomInt(2)], DinoTextureKeys.EnemyBird)
+                .setOrigin(0, 1);
+            obstacle.play(DinoAnimationKeys.EnemyBird, true);
+        } else {
+            let textureKey!: DinoTextureKeys;
+            let cactusHeight!: number
+            switch (numObstacles) {
+                case 1: {
+                    textureKey = DinoTextureKeys.Obstacle1;
+                    cactusHeight = 70
+                    break;
+                }
+                case 2: {
+                    textureKey = DinoTextureKeys.Obstacle2;
+                    cactusHeight = 70
+                    break;
+                }
+                case 3: {
+                    textureKey = DinoTextureKeys.Obstacle3;
+                    cactusHeight = 70
+                    break;
+                }
+                case 4: {
+                    textureKey = DinoTextureKeys.Obstacle4;
+                    cactusHeight = 96
+                    break;
+                }
+                case 5: {
+                    textureKey = DinoTextureKeys.Obstacle5;
+                    cactusHeight = 96
+                    break;
+                }
+                case 6: {
+                    textureKey = DinoTextureKeys.Obstacle6;
+                    cactusHeight = 98
+                    break;
+                }
+            }
+            obstacle = this.obstacles.create(width + distance, height - cactusHeight + 30, textureKey)
+            const obstacleBody = obstacle.body as Phaser.Physics.Arcade.StaticBody;
+        }
+        const obstacleBody = obstacle.body as Phaser.Physics.Arcade.Body;
+        obstacleBody.setImmovable();
+    }
+
+    update(t: number, dt: number) {
         if (!this.isGameRunning) {
             this.pressSpace2Start();
             return;
         }
         this.ground.tilePositionX += this.gameSpeed;
         this.handleInputs();
+        Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
+        Phaser.Actions.IncX(this.clouds.getChildren(), -0.5);
+        this.respawnTime += dt * this.gameSpeed * 0.05;
+        if (this.respawnTime >= 1500) {
+            this.spawnObstacles();
+            this.respawnTime = 0;
+        }
+        this.handleExcessObstacles();
+        this.wrapClouds();
+    }
+
+    handleExcessObstacles() {
+        this.obstacles.getChildren().forEach((obstacle) => {
+            const body = obstacle.body as Phaser.Physics.Arcade.Body;
+            const rightEdge = body.x + body.width;
+            if (rightEdge < 0) {
+                console.log('killed')
+                this.obstacles.killAndHide(obstacle);
+            }
+        });
+    }
+
+    wrapClouds() {
+        // this.clouds.getChildren().forEach((cloud) => {
+        //     const body = cloud.body as Phaser.Physics.Arcade.Body;
+        //     const rightEdge = body.x + body.width;
+        //     if (rightEdge < 0) {
+        //         const { width, height } = this.scale;
+        //         body.position.x = width + 30;
+        //     }
+        // });
     }
 }
