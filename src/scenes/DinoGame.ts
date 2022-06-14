@@ -18,11 +18,11 @@ export default class DinoGame extends Phaser.Scene {
     private hitSound!: Phaser.Sound.BaseSound;
     private reachSound!: Phaser.Sound.BaseSound;
 
-    private hasHitSoundPlayed = false;
-
     private ground!: Phaser.GameObjects.TileSprite;
     private dino!: Phaser.GameObjects.Sprite;
     private startTrigger!: Phaser.GameObjects.Sprite;
+    private clouds!: Phaser.GameObjects.Group;
+    private obstacles!: Phaser.Physics.Arcade.Group;
 
     private scoreLabel!: Phaser.GameObjects.Text;
     private highScoreLabel!: Phaser.GameObjects.Text;
@@ -31,14 +31,10 @@ export default class DinoGame extends Phaser.Scene {
     private gameSpeed = 5;
     private isGameRunning = false;
     private respawnTime = 0;
-
-    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-
+    private hasHitSoundPlayed = false;
     private dinoState = DinoState.Idle;
 
-    private clouds!: Phaser.GameObjects.Group;
-
-    private obstacles!: Phaser.Physics.Arcade.Group;
+    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
 
     constructor() {
         super(DinoSceneKeys.Game);
