@@ -99,7 +99,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 zeroPad: 3,
                 suffix: ".png"
             }),
-            frameRate: 10,
+            frameRate: 5,
             repeat: -1,
         })
 

@@ -45,29 +45,37 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     init() {
-        // const body = this.dino.body as Phaser.Physics.Arcade.Body
-        // body.setVelocityY(0)
-        // body.setSize(88,92)
-        // body.offset.y = 0
         this.physics.resume();
         // this.obstacles.clear(true, true)
-        // this.isGameRunning = true;
         this.anims.resumeAll();
         this.hasHitSoundPlayed = false;
     }
 
     create() {
-        const { width, height } = this.scale;
+        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, this.scale.height - 1);
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.createSounds();
+        this.createGround();
+        this.createDino();
+        this.createStartTrigger();
+        this.createClouds();
+        this.createObstacles();
+        this.createUI();
+    }
 
-        // audio
+    createSounds() {
         this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 1 });
         this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 1 });
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 1 });
+    }
 
-        this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
-
-        // ground
+    createGround() {
+        const height = this.scale.height;
         this.ground = this.add.tileSprite(0, height, 88, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
+    }
+
+    createDino() {
+        const height = this.scale.height;
         this.dino = this.physics.add
             .sprite(20, height, DinoTextureKeys.Dino)
             .play(DinoAnimationKeys.DinoIdle)
@@ -76,7 +84,26 @@ export default class DinoGame extends Phaser.Scene {
             .setBodySize(88, 92)
             .setDepth(1)
             .setOrigin(0, 1);
+    }
 
+    createClouds() {
+        const width = this.scale.width;
+        this.clouds = this.add.group();
+        this.clouds.addMultiple([
+            this.add.image(width / 2, 170, DinoTextureKeys.Cloud),
+            this.add.image(width - 80, 80, DinoTextureKeys.Cloud),
+            this.add.image(width / 1.3, 100, DinoTextureKeys.Cloud),
+        ]);
+        this.clouds.setAlpha(0);
+    }
+
+    createObstacles() {
+        this.obstacles = this.physics.add.group();
+        this.physics.add.collider(this.dino, this.obstacles, this.handleLose, undefined, this);
+    }
+
+    createScoreLabel() {
+        const width = this.scale.width;
         this.scoreLabel = this.add
             .text(width, 0, "00000", {
                 color: "#535353",
@@ -85,7 +112,10 @@ export default class DinoGame extends Phaser.Scene {
             })
             .setOrigin(1, 0)
             .setAlpha(1);
+        this.handleScore();
+    }
 
+    createHighScoreLabel() {
         this.highScoreLabel = this.add
             .text(0, 0, "00000", {
                 color: "#535353",
@@ -94,36 +124,60 @@ export default class DinoGame extends Phaser.Scene {
             })
             .setOrigin(1, 0)
             .setAlpha(0);
-
-        this.clouds = this.add.group();
-        this.clouds.addMultiple([
-            this.add.image(width / 2, 170, DinoTextureKeys.Cloud),
-            this.add.image(width - 80, 80, DinoTextureKeys.Cloud),
-            this.add.image(width / 1.3, 100, DinoTextureKeys.Cloud),
-        ]);
-        this.clouds.setAlpha(0);
-
-        this.obstacles = this.physics.add.group();
-
-        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 1);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.physics.add.overlap(this.dino, this.startTrigger, this.handleStart, undefined, this);
-        this.physics.add.collider(this.dino, this.obstacles, this.handleLose, undefined, this);
-        this.handleScore();
-
-        // HUONG DAN CUA MAY ANH, CAN PHAI CHIA NHO RA DE DE LAM
-
-        // this.createSound()
-        // this.createDino()
-        // this.createUI()
-        // this.createObstacles()
     }
 
-    // private createUI(): void {
-    //     this.createGround()
-    //     this.createWindows()
-    //     this.createBooksheves()
-    // }
+    createUI() {
+        this.createScoreLabel();
+        this.createHighScoreLabel();
+    }
+
+    createStartTrigger() {
+        this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
+        this.physics.add.overlap(this.dino, this.startTrigger, this.handleStart, undefined, this);
+    }
+
+    /**
+     * Turn off start trigger when start the game
+     * @returns None
+     */
+    handleStart() {
+        const { width, height } = this.scale;
+        const startTriggerBody = this.startTrigger.body as Phaser.Physics.Arcade.Body;
+        if (this.startTrigger.y == 10) {
+            this.startTrigger.setOrigin(0, 1);
+            startTriggerBody.reset(0, height); // bring trigger start to foot of dino for else branch
+            return;
+        }
+        // dino step on the trigger for a second time, so start the game
+        this.startTrigger.setActive(false);
+        const body = this.dino.body as Phaser.Physics.Arcade.Body;
+
+        const startEvent = this.time.addEvent({
+            delay: 1000 / 60,
+            loop: true,
+            callbackScope: this,
+            callback: () => {
+                body.setVelocityX(80);
+                this.dino.play(DinoAnimationKeys.DinoRun, true);
+                if (this.ground.width < width) this.ground.width += 5;
+                if (this.ground.width >= 1000) {
+                    this.ground.width = width;
+                    this.isGameRunning = true;
+                    body.setVelocityX(0);
+                    this.clouds.setAlpha(1);
+                    startEvent.remove();
+                }
+            },
+        });
+    }
+
+    pressSpace2Start() {
+        const body = this.dino.body as Phaser.Physics.Arcade.Body;
+        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+            this.jumpSound.play();
+            body.setVelocityY(-1600);
+        }
+    }
 
     handleLose() {
         this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20;
@@ -182,49 +236,6 @@ export default class DinoGame extends Phaser.Scene {
             case DinoState.Dead: {
                 break;
             }
-        }
-    }
-
-    /**
-     * Turn off start trigger when start the game
-     * @returns None
-     */
-    handleStart() {
-        const { width, height } = this.scale;
-        const startTriggerBody = this.startTrigger.body as Phaser.Physics.Arcade.Body;
-        if (this.startTrigger.y == 10) {
-            this.startTrigger.setOrigin(0, 1);
-            startTriggerBody.reset(0, height); // bring trigger start to foot of dino for else branch
-            return;
-        }
-        // dino step on the trigger for a second time, so start the game
-        this.startTrigger.setActive(false);
-        const body = this.dino.body as Phaser.Physics.Arcade.Body;
-
-        const startEvent = this.time.addEvent({
-            delay: 1000 / 60,
-            loop: true,
-            callbackScope: this,
-            callback: () => {
-                body.setVelocityX(80);
-                this.dino.play(DinoAnimationKeys.DinoRun, true);
-                if (this.ground.width < width) this.ground.width += 5;
-                if (this.ground.width >= 1000) {
-                    this.ground.width = width;
-                    this.isGameRunning = true;
-                    body.setVelocityX(0);
-                    this.clouds.setAlpha(1);
-                    startEvent.remove();
-                }
-            },
-        });
-    }
-
-    pressSpace2Start() {
-        const body = this.dino.body as Phaser.Physics.Arcade.Body;
-        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            this.jumpSound.play();
-            body.setVelocityY(-1600);
         }
     }
 
