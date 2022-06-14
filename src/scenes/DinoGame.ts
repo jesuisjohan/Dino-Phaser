@@ -4,13 +4,7 @@ import DinoSceneKeys from "~/consts/DinoSceneKeys"
 import DinoAudioKeys from "~/consts/DinoAudioKeys"
 import DinoTextureKeys from "~/consts/DinoTextureKeys"
 
-enum DinoState {
-    Idle,
-    Run,
-    Jump,
-    Duck,
-    Dead,
-}
+
 
 export default class DinoGame extends Phaser.Scene {
     // audio
@@ -34,7 +28,6 @@ export default class DinoGame extends Phaser.Scene {
     private isGameRunning = false
     private respawnTime = 0
     private hasHitSoundPlayed = false
-    private dinoState = DinoState.Idle
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
 
@@ -71,7 +64,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private createGround() {
-        const height = this.scale.height
+        const { height } = this.scale
         this.ground = this.add.tileSprite(0, height, 88, 26, DinoTextureKeys.Ground).setOrigin(0, 1)
     }
 
@@ -88,7 +81,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private createClouds() {
-        const width = this.scale.width
+        const { width } = this.scale
         this.clouds = this.add.group()
         this.clouds.addMultiple([
             this.add.image(width / 2, 170, DinoTextureKeys.Cloud),
@@ -104,7 +97,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private createScoreLabel() {
-        const width = this.scale.width
+        const { width } = this.scale
         this.scoreLabel = this.add
             .text(width, 0, "00000", {
                 color: "#535353",
@@ -227,23 +220,7 @@ export default class DinoGame extends Phaser.Scene {
             body.offset.y = 0
         }
 
-        switch (this.dinoState) {
-            case DinoState.Idle: {
-                break
-            }
-            case DinoState.Run: {
-                break
-            }
-            case DinoState.Jump: {
-                break
-            }
-            case DinoState.Duck: {
-                break
-            }
-            case DinoState.Dead: {
-                break
-            }
-        }
+        
     }
 
     private handleScore() {
@@ -273,7 +250,6 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private runScoreBlinkAnimation() {
-        // this.tweens.add({ targets: this.scoreLabel, ease: Phaser.Math.Easing. duration: 100, repeat: 3, alpha: 0, yoyo: true });
         this.tweens.add({ targets: this.scoreLabel, duration: 100, repeat: 3, alpha: 0, yoyo: true })
     }
 
