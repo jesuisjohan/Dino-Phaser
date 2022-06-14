@@ -67,9 +67,7 @@ export default class DinoGame extends Phaser.Scene {
         this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false);
 
         // ground
-        this.ground = this.add
-            .tileSprite(0, height, 88, 26, DinoTextureKeys.Ground)
-            .setOrigin(0, 1);
+        this.ground = this.add.tileSprite(0, height, 88, 26, DinoTextureKeys.Ground).setOrigin(0, 1);
         this.dino = this.physics.add
             .sprite(20, height, DinoTextureKeys.Dino)
             .play(DinoAnimationKeys.DinoIdle)
@@ -272,7 +270,7 @@ export default class DinoGame extends Phaser.Scene {
     spawnObstacles() {
         const { width, height } = this.scale;
         const numObstacles = this.getRandomInt(6) + 1;
-        const distance = Phaser.Math.Between(300, 450);
+        const distance = Phaser.Math.Between(100, 300);
 
         let obstacle: Phaser.Physics.Arcade.Sprite;
         if (numObstacles > 5) {
@@ -286,8 +284,8 @@ export default class DinoGame extends Phaser.Scene {
                 .setOrigin(0, 1);
             obstacle.play(DinoAnimationKeys.EnemyBird, true);
         } else {
-            let textureKey!: DinoTextureKeys;
-            let cactusHeight!: number;
+            let textureKey: DinoTextureKeys;
+            let cactusHeight: number;
             switch (numObstacles) {
                 case 1: {
                     textureKey = DinoTextureKeys.Obstacle1;
@@ -319,6 +317,11 @@ export default class DinoGame extends Phaser.Scene {
                     cactusHeight = 98;
                     break;
                 }
+                default: {
+                    textureKey = DinoTextureKeys.Obstacle6;
+                    cactusHeight = 98;
+                    break;
+                }
             }
             obstacle = this.obstacles.create(width + distance, height - cactusHeight + 34, textureKey);
         }
@@ -329,11 +332,12 @@ export default class DinoGame extends Phaser.Scene {
     handleExcessObstacles() {
         this.obstacles.getChildren().forEach((obstacle) => {
             const body = obstacle.body as Phaser.Physics.Arcade.Body;
+            if (body.enable == false) return;
             const rightEdge = body.x + body.width;
-            if (rightEdge < 0) {
-                console.log("killed");
-                this.obstacles.killAndHide(obstacle);
-            }
+            if (rightEdge > 0) return;
+            console.log("killed" + body.x);
+            this.obstacles.killAndHide(obstacle);
+            body.enable = false;
         });
     }
 
