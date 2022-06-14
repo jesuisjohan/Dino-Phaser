@@ -3,19 +3,19 @@ import Phaser from "phaser"
 import DinoSceneKeys from "~/consts/DinoSceneKeys"
 import DinoAudioKeys from "~/consts/DinoAudioKeys"
 import DinoTextureKeys from "~/consts/DinoTextureKeys"
-
-
+import Dino from "~/objects/Dino"
 
 export default class DinoGame extends Phaser.Scene {
     // audio
-    private jumpSound!: Phaser.Sound.BaseSound
+    // private jumpSound!: Phaser.Sound.BaseSound
     private hitSound!: Phaser.Sound.BaseSound
     private reachSound!: Phaser.Sound.BaseSound
     private bgm!: Phaser.Sound.BaseSound
     private endSound!: Phaser.Sound.BaseSound
 
     private ground!: Phaser.GameObjects.TileSprite
-    private dino!: Phaser.GameObjects.Sprite
+    // private dino!: Phaser.GameObjects.Sprite
+    private dino!: Dino
     private startTrigger!: Phaser.GameObjects.Sprite
     private clouds!: Phaser.GameObjects.Group
     private obstacles!: Phaser.Physics.Arcade.Group
@@ -29,7 +29,7 @@ export default class DinoGame extends Phaser.Scene {
     private respawnTime = 0
     private hasHitSoundPlayed = false
 
-    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+    // private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
 
     constructor() {
         super(DinoSceneKeys.Game)
@@ -44,7 +44,7 @@ export default class DinoGame extends Phaser.Scene {
 
     create() {
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, this.scale.height - 1)
-        this.cursors = this.input.keyboard.createCursorKeys()
+        // this.cursors = this.input.keyboard.createCursorKeys()
         this.createSounds()
         this.createGround()
         this.createDino()
@@ -55,7 +55,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private createSounds() {
-        this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 1 })
+        // this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 1 })
         this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 1 })
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 1 })
         this.bgm = this.sound.add(DinoAudioKeys.Loop, { volume: 0.2 })
@@ -70,14 +70,20 @@ export default class DinoGame extends Phaser.Scene {
 
     private createDino() {
         const { height } = this.scale
-        this.dino = this.physics.add
-            .sprite(20, height, DinoTextureKeys.Dino)
-            .play(DinoAnimationKeys.DinoIdle)
-            .setCollideWorldBounds(true)
-            .setGravityY(5000)
-            .setBodySize(88, 92)
-            .setDepth(1)
-            .setOrigin(0, 1)
+        // this.dino = this.physics.add
+        //     .sprite(20, height, DinoTextureKeys.Dino)
+        //     .play(DinoAnimationKeys.DinoIdle)
+        //     .setCollideWorldBounds(true)
+        //     .setGravityY(5000)
+        //     .setBodySize(88, 92)
+        //     .setDepth(1)
+        //     .setOrigin(0, 1)
+
+        this.dino = new Dino(this, 20, height)
+        this.add.existing(this.dino)
+        const body = this.dino.body as Phaser.Physics.Arcade.Body
+        body.setCollideWorldBounds(true)
+        body.setGravityY(5000)
     }
 
     private createClouds() {
@@ -93,7 +99,7 @@ export default class DinoGame extends Phaser.Scene {
 
     private createObstacles() {
         this.obstacles = this.physics.add.group()
-        this.physics.add.collider(this.dino, this.obstacles, this.handleLose, undefined, this)
+        this.physics.add.collider(this.obstacles, this.dino, this.handleLose, undefined, this)
     }
 
     private createScoreLabel() {
@@ -127,14 +133,15 @@ export default class DinoGame extends Phaser.Scene {
 
     private createStartTrigger() {
         this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false)
-        this.physics.add.overlap(this.dino, this.startTrigger, this.handleStart, undefined, this)
+        this.physics.add.overlap(this.startTrigger, this.dino, this.handleStart, undefined, this)
     }
 
     /**
      * Turn off start trigger when start the game
      * @returns None
      */
-    private handleStart() {
+    private handleStart(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+        console.log("handleStart")
         const { width, height } = this.scale
         const startTriggerBody = this.startTrigger.body as Phaser.Physics.Arcade.Body
         if (this.startTrigger.y == 10) {
@@ -152,7 +159,8 @@ export default class DinoGame extends Phaser.Scene {
             callbackScope: this,
             callback: () => {
                 body.setVelocityX(80)
-                this.dino.play(DinoAnimationKeys.DinoRun, true)
+                // this.dino.play(DinoAnimationKeys.DinoRun, true)
+                this.dino.playAnimation(DinoAnimationKeys.DinoRun)
                 if (this.ground.width < width) this.ground.width += 5
                 if (this.ground.width >= 1000) {
                     this.ground.width = width
@@ -166,11 +174,13 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private pressSpace2Start() {
-        const body = this.dino.body as Phaser.Physics.Arcade.Body
-        if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            this.jumpSound.play()
-            body.setVelocityY(-1600)
-        }
+        // const body = this.dino.body as Phaser.Physics.Arcade.Body
+        // if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+        //     this.jumpSound.play()
+        //     body.setVelocityY(-1600)
+        // }
+
+        this.dino.pressSpace()
     }
 
     private handleLose() {
@@ -183,10 +193,10 @@ export default class DinoGame extends Phaser.Scene {
         const highScore = Number(localStorage.getItem(highScoreKey))
         this.highScoreLabel.setText(this.zerosPaddingScore(highScore, 5))
         this.highScoreLabel.setAlpha(1)
-        this.physics.pause
+        this.physics.pause()
         this.isGameRunning = false
         this.anims.pauseAll()
-        this.dino.play(DinoAnimationKeys.DinoHurt, true)
+        this.dino.playAnimation(DinoAnimationKeys.DinoHurt)
         this.respawnTime = 0
         this.gameSpeed = 5
         this.score = 0
@@ -201,27 +211,26 @@ export default class DinoGame extends Phaser.Scene {
         this.scene.run(DinoSceneKeys.GameOver)
     }
 
-    private handleInputs() {
-        const body = this.dino.body as Phaser.Physics.Arcade.Body
-        const vy = 1600
-        if (this.cursors.down?.isDown) {
-            body.setVelocityY(vy)
-            this.dino.play(DinoAnimationKeys.DinoDown, true)
-            body.setSize(118, 58)
-            body.offset.y = 34
-        } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return
-            this.jumpSound.play()
-            body.setVelocityY(-vy)
-            this.dino.anims.stop()
-        } else {
-            this.dino.play(DinoAnimationKeys.DinoRun, true)
-            body.setSize(88, 92)
-            body.offset.y = 0
-        }
+    // private handleInputs() {
+    //     const body = this.dino.body as Phaser.Physics.Arcade.Body
+    //     const vy = 1600
+    //     if (this.cursors.down?.isDown) {
+    //         body.setVelocityY(vy)
+    //         this.dino.play(DinoAnimationKeys.DinoDown, true)
+    //         body.setSize(118, 58)
+    //         body.offset.y = 34
+    //     } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
+    //         if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return
+    //         this.jumpSound.play()
+    //         body.setVelocityY(-vy)
+    //         this.dino.anims.stop()
+    //     } else {
+    //         this.dino.play(DinoAnimationKeys.DinoRun, true)
+    //         body.setSize(88, 92)
+    //         body.offset.y = 0
+    //     }
 
-        
-    }
+    // }
 
     private handleScore() {
         this.time.addEvent({
@@ -353,7 +362,7 @@ export default class DinoGame extends Phaser.Scene {
             return
         }
         this.ground.tilePositionX += this.gameSpeed
-        this.handleInputs()
+        // this.handleInputs()
         Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
         Phaser.Actions.IncX(this.clouds.getChildren(), -0.5)
         this.respawnTime += dt * this.gameSpeed * 0.05

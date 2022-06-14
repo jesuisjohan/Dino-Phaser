@@ -18,23 +18,33 @@ export default class Dino extends Phaser.GameObjects.Container {
     private jumpSound!: Phaser.Sound.BaseSound
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y)
-        const { height } = this.scene.scale
-        this.dino = this.scene.physics.add
-            .sprite(20, height, DinoTextureKeys.Dino)
-            .play(DinoAnimationKeys.DinoIdle)
-            .setCollideWorldBounds(true)
-            .setGravityY(5000)
-            .setBodySize(88, 92)
-            .setDepth(1)
-            .setOrigin(0, 1)
+        // this.dino = scene.physics.add
+        //     .sprite(0, 0, DinoTextureKeys.Dino)
+        //     .play(DinoAnimationKeys.DinoIdle)
+        //     .setCollideWorldBounds(true)
+        //     .setGravityY(5000)
+        //     .setBodySize(88, 92)
+        //     .setDepth(1)
+        //     .setOrigin(0, 1)
+
+        this.jumpSound = scene.sound.add(DinoAudioKeys.Jump, { volume: 1 })
+        this.dino = scene.add.sprite(0, 0, DinoTextureKeys.Dino).setOrigin(0, 0).play(DinoAnimationKeys.DinoIdle).setDepth(1)
 
         this.add(this.dino)
-        this.cursors = this.scene.input.keyboard.createCursorKeys()
-        this.jumpSound = this.scene.sound.add(DinoAudioKeys.Jump, { volume: 1 })
+
+        scene.physics.add.existing(this)
+        const body = this.body as Phaser.Physics.Arcade.Body;
+        body.setSize(88, 92)
+        body.setOffset(0, 92)
+        this.cursors = scene.input.keyboard.createCursorKeys()
     }
 
-    pressSpace() {
-        const body = this.dino.body as Phaser.Physics.Arcade.Body
+    playAnimation(key: DinoAnimationKeys) {
+        this.dino.play(key, true)
+    }
+
+    public pressSpace() {
+        const body = this.body as Phaser.Physics.Arcade.Body
         if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
             this.jumpSound.play()
             body.setVelocityY(-1600)
@@ -42,7 +52,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     preUpdate() {
-        const body = this.dino.body as Phaser.Physics.Arcade.Body
+        const body = this.body as Phaser.Physics.Arcade.Body
         const vy = 1600
         if (this.cursors.down?.isDown) {
             body.setVelocityY(vy)
