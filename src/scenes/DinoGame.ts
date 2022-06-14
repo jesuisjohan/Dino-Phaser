@@ -262,6 +262,7 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     flashScore() {
+        // this.tweens.add({ targets: this.scoreLabel, ease: Phaser.Math.Easing. duration: 100, repeat: 3, alpha: 0, yoyo: true });
         this.tweens.add({ targets: this.scoreLabel, duration: 100, repeat: 3, alpha: 0, yoyo: true });
     }
 
