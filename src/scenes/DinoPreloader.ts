@@ -14,6 +14,9 @@ export default class DinoPreloader extends Phaser.Scene {
         this.load.audio(DinoAudioKeys.Reach, "assets/reach.m4a");
         this.load.audio(DinoAudioKeys.Hit, "assets/hit.m4a");
         this.load.audio(DinoAudioKeys.Jump, "assets/jump.m4a");
+        this.load.audio(DinoAudioKeys.Intro, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/Intro.wav")
+        this.load.audio(DinoAudioKeys.Loop, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/Loop.wav")
+        this.load.audio(DinoAudioKeys.End, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/End.wav")
 
         // images - not obstacles
         this.load.image(DinoTextureKeys.Cloud, "assets/cloud.png");

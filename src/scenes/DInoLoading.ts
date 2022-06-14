@@ -1,14 +1,13 @@
 import Phaser from "phaser";
 import DinoSceneKeys from "~/consts/DinoSceneKeys";
-import DinoTextureKeys from "~/consts/DinoTextureKeys";
 import DinoAudioKeys from "~/consts/DinoAudioKeys";
-import DinoAnimationKeys from "~/consts/DinoAnimationKeys";
 
 export default class DinoLoading extends Phaser.Scene {
     private debug!: Phaser.GameObjects.Graphics;
     private progress = 0;
     private percentageLabel!: Phaser.GameObjects.Text;
     private loadingLabel!: Phaser.GameObjects.Text;
+    private intro!: Phaser.Sound.BaseSound;
 
     constructor() {
         super(DinoSceneKeys.Loading);
@@ -16,8 +15,14 @@ export default class DinoLoading extends Phaser.Scene {
 
     create() {
         this.debug = this.add.graphics();
+        this.createSounds();
         this.createPercentageLabel();
         this.createLoadingLabel();
+    }
+
+    createSounds() {
+        this.intro = this.sound.add(DinoAudioKeys.Intro, { volume: 0.2 });
+        this.intro.play();
     }
 
     createPercentageLabel() {
@@ -39,15 +44,15 @@ export default class DinoLoading extends Phaser.Scene {
                 resolution: 5,
             })
             .setOrigin(0, 0);
-        
+
         this.tweens.add({
             targets: this.loadingLabel,
-            duration: 1000,
+            duration: 500,
             repeat: -1,
             ease: Phaser.Math.Easing.Sine.InOut,
-            alpha: 0.6,
+            alpha: 0.5,
             yoyo: true,
-        })
+        });
     }
 
     update(time: number, deltaTime: number) {
@@ -56,9 +61,10 @@ export default class DinoLoading extends Phaser.Scene {
         this.debug.clear();
         const barWidth = 600;
         const barHeight = 48;
+        // housing
         this.debug.fillStyle(0x2d2d2d);
         this.debug.fillRect(width / 2 - barWidth / 2, height / 2 - barHeight / 2, barWidth, barHeight);
-
+        // filling
         this.debug.fillStyle(0x2dff2d);
         this.debug.fillRect(
             width / 2 - barWidth / 2,
@@ -68,7 +74,7 @@ export default class DinoLoading extends Phaser.Scene {
         );
 
         this.progress += deltaTime * 0.0003;
-        if (this.progress > 1.5) {
+        if (this.progress > 1 && !this.intro.isPlaying) {
             this.scene.start(DinoSceneKeys.Game);
         }
         this.percentageLabel.setText(`${Math.round(displayProgress * 100)}%`);

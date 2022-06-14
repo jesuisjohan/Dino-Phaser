@@ -17,6 +17,8 @@ export default class DinoGame extends Phaser.Scene {
     private jumpSound!: Phaser.Sound.BaseSound;
     private hitSound!: Phaser.Sound.BaseSound;
     private reachSound!: Phaser.Sound.BaseSound;
+    private bgm!: Phaser.Sound.BaseSound;
+    private endSound!: Phaser.Sound.BaseSound;
 
     private ground!: Phaser.GameObjects.TileSprite;
     private dino!: Phaser.GameObjects.Sprite;
@@ -63,6 +65,9 @@ export default class DinoGame extends Phaser.Scene {
         this.jumpSound = this.sound.add(DinoAudioKeys.Jump, { volume: 1 });
         this.hitSound = this.sound.add(DinoAudioKeys.Hit, { volume: 1 });
         this.reachSound = this.sound.add(DinoAudioKeys.Reach, { volume: 1 });
+        this.bgm = this.sound.add(DinoAudioKeys.Loop, { volume: 0.2 });
+        this.bgm.play();
+        this.endSound = this.sound.add(DinoAudioKeys.End, { volume: 0.2 });
     }
 
     createGround() {
@@ -193,6 +198,10 @@ export default class DinoGame extends Phaser.Scene {
         if (!this.hitSound.isPlaying && !this.hasHitSoundPlayed) {
             this.hitSound.play();
             this.hasHitSoundPlayed = true;
+            this.bgm.stop();
+            setTimeout(() => {
+                this.endSound.play();
+            }, 1000);
         }
         this.scene.run(DinoSceneKeys.GameOver);
     }
