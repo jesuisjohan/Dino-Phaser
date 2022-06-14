@@ -133,7 +133,7 @@ export default class DinoPreloader extends Phaser.Scene {
             repeat: -1,
         })
 
-        this.scene.start(DinoSceneKeys.Game)
+        this.scene.start(DinoSceneKeys.Loading)
 
     }
 }
