@@ -5,7 +5,7 @@ enum DinoAnimationKeys {
     DinoDown = "dino-down",
     EnemyBird = "enemy-bird",
     Moon = "moon",
-    Stars = "stars"
+    Stars = "stars",
 }
 
-export default DinoAnimationKeys;
+export default DinoAnimationKeys

@@ -7,4 +7,4 @@ enum DinoAudioKeys {
     End = "end",
 }
 
-export default DinoAudioKeys;
+export default DinoAudioKeys

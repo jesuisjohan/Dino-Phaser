@@ -1,8 +1,8 @@
 enum DinoSceneKeys {
-  Preloader = "dino-preloader",
-  Game = "dino-game",
-  GameOver = 'dino-game-over',
-  Loading = "dino-loading"
+    Preloader = "dino-preloader",
+    Game = "dino-game",
+    GameOver = "dino-game-over",
+    Loading = "dino-loading",
 }
 
-export default DinoSceneKeys;
+export default DinoSceneKeys

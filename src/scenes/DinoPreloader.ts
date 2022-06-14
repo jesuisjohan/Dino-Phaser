@@ -1,47 +1,47 @@
-import Phaser from "phaser";
-import DinoSceneKeys from "~/consts/DinoSceneKeys";
-import DinoTextureKeys from "~/consts/DinoTextureKeys";
-import DinoAudioKeys from "~/consts/DinoAudioKeys";
-import DinoAnimationKeys from "~/consts/DinoAnimationKeys";
+import Phaser from "phaser"
+import DinoSceneKeys from "~/consts/DinoSceneKeys"
+import DinoTextureKeys from "~/consts/DinoTextureKeys"
+import DinoAudioKeys from "~/consts/DinoAudioKeys"
+import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
 
 export default class DinoPreloader extends Phaser.Scene {
     constructor() {
-        super(DinoSceneKeys.Preloader);
+        super(DinoSceneKeys.Preloader)
     }
 
     preload() {
         // audio
-        this.load.audio(DinoAudioKeys.Reach, "assets/reach.m4a");
-        this.load.audio(DinoAudioKeys.Hit, "assets/hit.m4a");
-        this.load.audio(DinoAudioKeys.Jump, "assets/jump.m4a");
+        this.load.audio(DinoAudioKeys.Reach, "assets/reach.m4a")
+        this.load.audio(DinoAudioKeys.Hit, "assets/hit.m4a")
+        this.load.audio(DinoAudioKeys.Jump, "assets/jump.m4a")
         this.load.audio(DinoAudioKeys.Intro, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/Intro.wav")
         this.load.audio(DinoAudioKeys.Loop, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/Loop.wav")
         this.load.audio(DinoAudioKeys.End, "assets/8-bit-music/Separated_Files/And_The_Journey_Begins/End.wav")
 
         // images - not obstacles
-        this.load.image(DinoTextureKeys.Cloud, "assets/cloud.png");
-        this.load.image(DinoTextureKeys.Ground, "assets/ground.png");
-        this.load.image(DinoTextureKeys.Restart, "assets/restart.png");
-        this.load.image(DinoTextureKeys.GameOver, "assets/game-over.png");
+        this.load.image(DinoTextureKeys.Cloud, "assets/cloud.png")
+        this.load.image(DinoTextureKeys.Ground, "assets/ground.png")
+        this.load.image(DinoTextureKeys.Restart, "assets/restart.png")
+        this.load.image(DinoTextureKeys.GameOver, "assets/game-over.png")
         // images - obstacles
         // small
-        this.load.image(DinoTextureKeys.Obstacle1, "assets/cactuses_small_1.png");
-        this.load.image(DinoTextureKeys.Obstacle2, "assets/cactuses_small_2.png");
-        this.load.image(DinoTextureKeys.Obstacle3, "assets/cactuses_small_3.png");
+        this.load.image(DinoTextureKeys.Obstacle1, "assets/cactuses_small_1.png")
+        this.load.image(DinoTextureKeys.Obstacle2, "assets/cactuses_small_2.png")
+        this.load.image(DinoTextureKeys.Obstacle3, "assets/cactuses_small_3.png")
         // big
-        this.load.image(DinoTextureKeys.Obstacle4, "assets/cactuses_big_1.png");
-        this.load.image(DinoTextureKeys.Obstacle5, "assets/cactuses_big_2.png");
-        this.load.image(DinoTextureKeys.Obstacle6, "assets/cactuses_big_3.png");
+        this.load.image(DinoTextureKeys.Obstacle4, "assets/cactuses_big_1.png")
+        this.load.image(DinoTextureKeys.Obstacle5, "assets/cactuses_big_2.png")
+        this.load.image(DinoTextureKeys.Obstacle6, "assets/cactuses_big_3.png")
 
         // sprite sheet
-        this.load.atlas(DinoTextureKeys.Dino, "assets/dino/dino.png", "assets/dino/dino.json");
+        this.load.atlas(DinoTextureKeys.Dino, "assets/dino/dino.png", "assets/dino/dino.json")
         this.load.atlas(
             DinoTextureKeys.EnemyBird,
             "assets/enemy_bird/enemy-bird.png",
             "assets/enemy_bird/enemy-bird.json"
-        );
-        this.load.atlas(DinoTextureKeys.Moon, "assets/moon/moon.png", "assets/moon/moon.json");
-        this.load.atlas(DinoTextureKeys.Stars, "assets/stars/stars.png", "assets/stars/stars.json");
+        )
+        this.load.atlas(DinoTextureKeys.Moon, "assets/moon/moon.png", "assets/moon/moon.json")
+        this.load.atlas(DinoTextureKeys.Stars, "assets/stars/stars.png", "assets/stars/stars.json")
     }
 
     create() {
@@ -55,7 +55,7 @@ export default class DinoPreloader extends Phaser.Scene {
                     frame: "dino_idle.png",
                 },
             ],
-        });
+        })
 
         this.anims.create({
             key: DinoAnimationKeys.DinoHurt,
@@ -65,7 +65,7 @@ export default class DinoPreloader extends Phaser.Scene {
                     frame: "dino_hurt.png",
                 },
             ],
-        });
+        })
 
         this.anims.create({
             key: DinoAnimationKeys.DinoRun,
@@ -77,7 +77,7 @@ export default class DinoPreloader extends Phaser.Scene {
             }),
             frameRate: 10,
             repeat: -1,
-        });
+        })
 
         this.anims.create({
             key: DinoAnimationKeys.DinoDown,
@@ -89,7 +89,7 @@ export default class DinoPreloader extends Phaser.Scene {
             }),
             frameRate: 10,
             repeat: -1,
-        });
+        })
 
         // bird
 
@@ -100,7 +100,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 end: 1,
                 prefix: "tile",
                 zeroPad: 3,
-                suffix: ".png"
+                suffix: ".png",
             }),
             frameRate: 5,
             repeat: -1,
@@ -115,7 +115,7 @@ export default class DinoPreloader extends Phaser.Scene {
                 end: 7,
                 prefix: "tile",
                 zeroPad: 3,
-                suffix: ".png"
+                suffix: ".png",
             }),
             frameRate: 10,
             repeat: -1,
@@ -130,13 +130,12 @@ export default class DinoPreloader extends Phaser.Scene {
                 end: 2,
                 prefix: "tile",
                 zeroPad: 3,
-                suffix: ".png"
+                suffix: ".png",
             }),
             frameRate: 10,
             repeat: -1,
         })
 
         this.scene.start(DinoSceneKeys.Loading)
-
     }
 }
