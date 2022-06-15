@@ -7,14 +7,12 @@ import Dino from "~/objects/Dino"
 
 export default class DinoGame extends Phaser.Scene {
     // audio
-    // private jumpSound!: Phaser.Sound.BaseSound
     private hitSound!: Phaser.Sound.BaseSound
     private reachSound!: Phaser.Sound.BaseSound
     private bgm!: Phaser.Sound.BaseSound
     private endSound!: Phaser.Sound.BaseSound
 
     private ground!: Phaser.GameObjects.TileSprite
-    // private dino!: Phaser.GameObjects.Sprite
     private dino!: Dino
     private startTrigger!: Phaser.GameObjects.Sprite
     private clouds!: Phaser.GameObjects.Group
@@ -157,10 +155,6 @@ export default class DinoGame extends Phaser.Scene {
                 }
             },
         })
-    }
-
-    private pressSpace2Start() {
-        this.dino.pressSpace()
     }
 
     private handleLose() {
@@ -315,7 +309,6 @@ export default class DinoGame extends Phaser.Scene {
 
     update(t: number, dt: number) {
         if (!this.isGameRunning) {
-            if (this.highScoreLabel.alpha == 0) this.pressSpace2Start()
             return
         }
         if (!this.bgm.isPlaying) this.bgm.play()
