@@ -3,9 +3,14 @@ import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
 import DinoAudioKeys from "~/consts/DinoAudioKeys"
 import DinoTextureKeys from "~/consts/DinoTextureKeys"
 
-import { Idling, Jumping, Running, Ducking, Dead } from "~/State/State"
-import DinoState from "~/State/State"
-import { DinoStateEnum } from "~/State/State"
+import IdlingState from "~/States/IdlingState"
+import JumpingState from "~/States/JumpingState"
+import RunningState from "~/States/RunningState"
+import DuckingState from "~/States/DuckingState"
+import DeadState from "~/States/DeadState"
+
+import DinoState from "~/States/DinoState"
+import DinoStateEnum from "~/consts/DinoStateEnum"
 
 export default class Dino extends Phaser.GameObjects.Container {
     private dino!: Phaser.GameObjects.Sprite
@@ -83,7 +88,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.Body
         body.setSize(88, 92)
         body.offset.y = 0
-        
+
         this.dino.play(DinoAnimationKeys.DinoIdle, true)
     }
 
@@ -91,20 +96,20 @@ export default class Dino extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.Body
         body.setSize(118, 58)
         body.offset.y = 34
-        
+
         const vy = 1600
         body.setVelocityY(vy)
-        
+
         this.dino.play(DinoAnimationKeys.DinoDown, true)
     }
 
     public jump() {
         this.jumpSound.play()
-        
+
         const body = this.body as Phaser.Physics.Arcade.Body
         const vy = 1600
         body.setVelocityY(-vy)
-        
+
         this.dino.anims.stop()
     }
 
@@ -112,7 +117,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         const body = this.body as Phaser.Physics.Arcade.Body
         body.setSize(88, 92)
         body.offset.y = 0
-        
+
         this.dino.play(DinoAnimationKeys.DinoRun, true)
     }
 
@@ -123,24 +128,24 @@ export default class Dino extends Phaser.GameObjects.Container {
     public setCurrentState(state: DinoStateEnum) {
         switch (state) {
             case DinoStateEnum.RUNNING: {
-                this.currentState = new Running(this)
+                this.currentState = new RunningState(this)
                 break
             }
             case DinoStateEnum.JUMPING: {
-                this.currentState = new Jumping(this)
+                this.currentState = new JumpingState(this)
                 break
             }
             case DinoStateEnum.DUCKING: {
-                this.currentState = new Ducking(this)
+                this.currentState = new DuckingState(this)
                 break
             }
             case DinoStateEnum.DEAD: {
-                this.currentState = new Dead(this)
+                this.currentState = new DeadState(this)
                 break
             }
             case DinoStateEnum.IDLING:
             default: {
-                this.currentState = new Idling(this)
+                this.currentState = new IdlingState(this)
                 break
             }
         }
