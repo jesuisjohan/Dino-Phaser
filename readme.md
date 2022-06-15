@@ -79,9 +79,9 @@ Production files will be placed in the `dist` folder. Then upload those files to
     ├── package.json
 ```
 
-The contents of this template is the basic [Phaser 3 getting started example](http://phaser.io/tutorials/getting-started-phaser3/part5).
+The contents of this game is the basic [Phaser 3 getting started example](http://phaser.io/tutorials/getting-started-phaser3/part5).
 
-This template assumes you will want to organize your code into multiple files and use TypeScript.
+This game assumes you will want to organize your code into multiple files and use TypeScript.
 
 TypeScript files are intended for the `src` folder. `main.ts` is the entry point referenced by `index.html`.
 
@@ -107,7 +107,7 @@ They can then be loaded by Phaser with `this.image.load('my-image', 'images/my-i
 
 ## TypeScript ESLint
 
-This template uses a basic `typescript-eslint` set up for code linting.
+This game uses a basic `typescript-eslint` set up for code linting.
 
 It does not aim to be opinionated.
 
