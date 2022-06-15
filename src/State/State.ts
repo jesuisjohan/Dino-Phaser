@@ -73,7 +73,7 @@ export class Running extends DinoState {
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.down?.isDown) {
             this.dino.setCurrentState(DinoStateEnum.DUCKING)
-        } else if ((cursors.space?.isDown || cursors.up?.isDown) && this.dino.onGround()) {
+        } else if (cursors.space?.isDown || cursors.up?.isDown) {
             this.dino.setCurrentState(DinoStateEnum.JUMPING)
         }
     }
