@@ -144,7 +144,6 @@ export default class DinoGame extends Phaser.Scene {
             callbackScope: this,
             callback: () => {
                 body.setVelocityX(80)
-                this.dino.playAnimation(DinoAnimationKeys.DinoRun)
                 if (this.ground.width < width) this.ground.width += 5
                 if (this.ground.width >= 1000) {
                     this.ground.width = width
