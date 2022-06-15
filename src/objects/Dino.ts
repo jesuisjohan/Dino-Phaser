@@ -51,6 +51,10 @@ export default class Dino extends Phaser.GameObjects.Container {
         }
     }
 
+    kill() {
+        this.dino.play(DinoAnimationKeys.DinoHurt, true)
+    }
+
     preUpdate() {
         const body = this.body as Phaser.Physics.Arcade.Body
         const vy = 1600
