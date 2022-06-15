@@ -29,7 +29,7 @@ export class Idling extends DinoState {
     }
 
     override enter(): void {
-
+        this.dino.idle()
     }
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
@@ -47,7 +47,7 @@ export class Jumping extends DinoState {
     }
 
     override enter(): void {
-
+        this.dino.jump()
     }
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
@@ -67,7 +67,7 @@ export class Running extends DinoState {
     }
 
     override enter(): void {
-
+        this.dino.run()
     }
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
@@ -87,7 +87,7 @@ export class Ducking extends DinoState {
     }
 
     override enter(): void {
-
+        this.dino.duck()
     }
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
@@ -105,6 +105,6 @@ export class Dead extends DinoState {
     }
 
     override enter() {
-        
+        this.dino.dead()
     }
 }

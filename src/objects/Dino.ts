@@ -47,38 +47,10 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.dino.play(key, true)
     }
 
-    public idle() {
-        this.dino.play(DinoAnimationKeys.DinoIdle, true)
-    }
-
-    public duck() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        const vy = 1600
-        body.setVelocityY(vy)
-        this.dino.play(DinoAnimationKeys.DinoDown, true)
-        body.setSize(118, 58)
-        body.offset.y = 34
-    }
-
-    public jump() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        const vy = 1600
-        this.jumpSound.play()
-        body.setVelocityY(-vy)
-        this.run()
-        this.dino.anims.stop()
-    }
-
-    public run() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        this.dino.play(DinoAnimationKeys.DinoRun, true)
-        body.setSize(88, 92)
-        body.offset.y = 0
-    }
+    // utils
 
     public kill() {
         this.setCurrentState(DinoStateEnum.DEAD)
-        this.dino.play(DinoAnimationKeys.DinoHurt, true)
     }
 
     public onGround() {
@@ -90,18 +62,51 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     preUpdate() {
-        if (this.cursors.down?.isDown) {
-            this.duck()
-        } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            if (!this.onGround() || this.isMovingRight() || this.cursors.down.isDown) return
-            this.jump()
-        } else {
-            this.run()
-        }
-
         this.currentState.handleInput(this.cursors)
-
         console.log(this.currentState.state)
+    }
+
+    // state management
+
+    public idle() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setSize(88, 92)
+        body.offset.y = 0
+        
+        this.dino.play(DinoAnimationKeys.DinoIdle, true)
+    }
+
+    public duck() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setSize(118, 58)
+        body.offset.y = 34
+        
+        const vy = 1600
+        body.setVelocityY(vy)
+        
+        this.dino.play(DinoAnimationKeys.DinoDown, true)
+    }
+
+    public jump() {
+        this.jumpSound.play()
+        
+        const body = this.body as Phaser.Physics.Arcade.Body
+        const vy = 1600
+        body.setVelocityY(-vy)
+        
+        this.dino.anims.stop()
+    }
+
+    public run() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setSize(88, 92)
+        body.offset.y = 0
+        
+        this.dino.play(DinoAnimationKeys.DinoRun, true)
+    }
+
+    public dead() {
+        this.dino.play(DinoAnimationKeys.DinoHurt, true)
     }
 
     public setCurrentState(state: DinoStateEnum) {

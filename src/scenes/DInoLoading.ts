@@ -69,7 +69,9 @@ export default class DinoLoading extends Phaser.Scene {
         this.debug.fillRect(width / 2 - barWidth / 2, height / 2 - barHeight / 2, barWidth * displayProgress, barHeight)
 
         this.progress += deltaTime * 0.0003
-        if (this.progress > 1 && !this.intro.isPlaying) {
+        if (this.progress > 1 
+            && !this.intro.isPlaying
+            ) {
             this.scene.start(DinoSceneKeys.Game)
         }
         this.percentageLabel.setText(`${Math.round(displayProgress * 100)}%`)
