@@ -61,10 +61,21 @@ export default class Dino extends Phaser.GameObjects.Container {
         return (this.body as Phaser.Physics.Arcade.Body).velocity.x > 0
     }
 
+    // update
     preUpdate() {
         this.currentState.handleInput(this.cursors)
         console.log(this.currentState.state)
     }
+
+    // handleInput() {
+    //     if (cursors.down?.isDown) {
+    //         this.state.ducking()
+    //     }
+
+    //     if (cursor.space?.isDown) {
+    //         this.state.jump()
+    //     }
+    // }
 
     // state management
 

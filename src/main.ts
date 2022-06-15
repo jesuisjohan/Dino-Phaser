@@ -8,19 +8,15 @@ import DinoLoading from "./scenes/DinoLoading";
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: 1000, // 800,
-    height: 340, //640,
+    height: 350, //640,
     pixelArt: true,
     transparent: true, // light - true, dark - false
     physics: {
         default: "arcade",
         arcade: {
-            // gravity: { y: 400 },
             debug: true,
         },
     },
-
-    // scene: [HelloWorldScene]
-    // scene: [Preloader, Game, GameOver],
     scene: [DinoPreloader, DinoLoading, DinoGame, DinoGameOver],
 };
 

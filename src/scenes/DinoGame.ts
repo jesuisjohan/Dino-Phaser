@@ -309,16 +309,13 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     update(t: number, dt: number) {
-        if (!this.isGameRunning) {
-            return
-        }
-        // if (this.dinoState === DEAD) return
+        if (!this.isGameRunning) return
         if (!this.bgm.isPlaying) this.bgm.play()
         this.ground.tilePositionX += this.gameSpeed
         Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
         Phaser.Actions.IncX(this.clouds.getChildren(), -0.5)
         this.respawnTime += dt * this.gameSpeed * 0.05
-        if (this.respawnTime >= 1500) {
+        if (this.respawnTime >= 500) {
             this.spawnObstacles()
             this.respawnTime = 0
         }

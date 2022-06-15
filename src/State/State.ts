@@ -18,6 +18,15 @@ export default class DinoState {
 
     enter() {}
 
+    // jump() {
+    //     //implement
+    // }
+
+    // dash() {
+    //     //
+    // }
+
+
     handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {}
 }
 
@@ -35,7 +44,7 @@ export class Idling extends DinoState {
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.space?.isDown || cursors.up?.isDown) {
             this.dino.setCurrentState(DinoStateEnum.JUMPING)
-        }
+        } 
     }
 }
 
@@ -70,6 +79,14 @@ export class Running extends DinoState {
         this.dino.run()
     }
 
+    // jump() {
+    //     this.dino.jump()
+    // }
+
+    // ducking() {
+    //     this.dino.duck();
+    // }
+
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.down?.isDown) {
             this.dino.setCurrentState(DinoStateEnum.DUCKING)
@@ -89,6 +106,14 @@ export class Ducking extends DinoState {
     override enter(): void {
         this.dino.duck()
     }
+
+    // jump() {
+    //     //
+    // }
+
+    // ducking() {
+    //     //
+    // }
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.down?.isUp) {
