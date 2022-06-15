@@ -80,7 +80,6 @@ export default class Dino extends Phaser.GameObjects.Container {
 
     preUpdate() {
         const body = this.body as Phaser.Physics.Arcade.Body
-        const vy = 1600
         if (this.cursors.down?.isDown) {
             this.duck()
         } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
