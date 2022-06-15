@@ -3,9 +3,9 @@ import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
 import DinoAudioKeys from "~/consts/DinoAudioKeys"
 import DinoTextureKeys from "~/consts/DinoTextureKeys"
 
-import { Idle, Jump, Run, Duck, Dead } from "~/State/State"
-import State from "~/State/State"
-import { DinoState } from "~/State/State"
+import { Idling, Jumping, Running, Ducking, Dead } from "~/State/State"
+import DinoState from "~/State/State"
+import { DinoStateEnum } from "~/State/State"
 
 export default class Dino extends Phaser.GameObjects.Container {
     private dino!: Phaser.GameObjects.Sprite
@@ -15,9 +15,11 @@ export default class Dino extends Phaser.GameObjects.Container {
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y)
+        this.scene = scene
         this.createSound(scene)
         this.createDinoSprite(scene)
         this.addDinoPhysicsBody(scene)
+        this.setCurrentState(DinoStateEnum.IDLING)
         this.cursors = scene.input.keyboard.createCursorKeys()
     }
 
@@ -75,38 +77,57 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     public kill() {
+        this.setCurrentState(DinoStateEnum.DEAD)
         this.dino.play(DinoAnimationKeys.DinoHurt, true)
     }
 
+    public onGround() {
+        return (this.body as Phaser.Physics.Arcade.Body).blocked.down
+    }
+
+    public isMovingRight() {
+        return (this.body as Phaser.Physics.Arcade.Body).velocity.x > 0
+    }
+
     preUpdate() {
-        const body = this.body as Phaser.Physics.Arcade.Body
         if (this.cursors.down?.isDown) {
             this.duck()
         } else if (this.cursors.space?.isDown || this.cursors.up?.isDown) {
-            if (!body.blocked.down || body.velocity.x > 0 || this.cursors.down.isDown) return
+            if (!this.onGround() || this.isMovingRight() || this.cursors.down.isDown) return
             this.jump()
         } else {
             this.run()
         }
+
+        this.currentState.handleInput(this.cursors)
+
+        console.log(this.currentState.state)
     }
 
-    public setCurrentState(state: DinoState) {
+    public setCurrentState(state: DinoStateEnum) {
         switch (state) {
-            case DinoState.IDLE: {
+            case DinoStateEnum.RUNNING: {
+                this.currentState = new Running(this)
                 break
             }
-            case DinoState.RUN: {
+            case DinoStateEnum.JUMPING: {
+                this.currentState = new Jumping(this)
                 break
             }
-            case DinoState.JUMP: {
+            case DinoStateEnum.DUCKING: {
+                this.currentState = new Ducking(this)
                 break
             }
-            case DinoState.DUCK: {
+            case DinoStateEnum.DEAD: {
+                this.currentState = new Dead(this)
                 break
             }
-            case DinoState.DEAD: {
+            case DinoStateEnum.IDLING:
+            default: {
+                this.currentState = new Idling(this)
                 break
             }
         }
+        this.currentState.enter()
     }
 }

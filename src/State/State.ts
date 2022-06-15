@@ -1,18 +1,18 @@
 import Phaser from "phaser"
 import Dino from "~/objects/Dino"
 
-export enum DinoState {
-    IDLE,
-    RUN,
-    JUMP,
-    DUCK,
+export enum DinoStateEnum {
+    IDLING,
+    RUNNING,
+    JUMPING,
+    DUCKING,
     DEAD,
 }
 
-export default class State {
-    state: DinoState
+export default class DinoState {
+    state: string
 
-    constructor(state: DinoState) {
+    constructor(state: string) {
         this.state = state
     }
 
@@ -21,68 +21,90 @@ export default class State {
     handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {}
 }
 
-export class Idle extends State {
+export class Idling extends DinoState {
     dino: Dino
     constructor(dino: Dino) {
-        super(DinoState.IDLE)
+        super("IDLING")
         this.dino = dino
     }
 
-    override enter(): void {}
-}
+    override enter(): void {
 
-export class Jump extends State {
-    dino: Dino
-    constructor(dino: Dino) {
-        super(DinoState.JUMP)
-        this.dino = dino
     }
-
-    override enter(): void {}
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.space?.isDown || cursors.up?.isDown) {
-            this.dino.setCurrentState(DinoState.JUMP)
+            this.dino.setCurrentState(DinoStateEnum.JUMPING)
         }
     }
 }
 
-export class Run extends State {
+export class Jumping extends DinoState {
     dino: Dino
     constructor(dino: Dino) {
-        super(DinoState.RUN)
+        super("JUMPING")
         this.dino = dino
     }
 
-    override enter(): void {}
-
-    override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
+    override enter(): void {
 
     }
-}
-
-export class Duck extends State {
-    dino: Dino
-    constructor(dino: Dino) {
-        super(DinoState.DUCK)
-        this.dino = dino
-    }
-
-    override enter(): void {}
 
     override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
         if (cursors.down?.isDown) {
-            this.dino.setCurrentState(DinoState.DUCK)
+            this.dino.setCurrentState(DinoStateEnum.DUCKING)
+        } else if (this.dino.onGround()) {
+            this.dino.setCurrentState(DinoStateEnum.RUNNING)
         }
     }
 }
 
-export class Dead extends State {
+export class Running extends DinoState {
     dino: Dino
     constructor(dino: Dino) {
-        super(DinoState.DEAD)
+        super("RUNNING")
         this.dino = dino
     }
 
-    override enter() {}
+    override enter(): void {
+
+    }
+
+    override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
+        if (cursors.down?.isDown) {
+            this.dino.setCurrentState(DinoStateEnum.DUCKING)
+        } else if ((cursors.space?.isDown || cursors.up?.isDown) && this.dino.onGround()) {
+            this.dino.setCurrentState(DinoStateEnum.JUMPING)
+        }
+    }
+}
+
+export class Ducking extends DinoState {
+    dino: Dino
+    constructor(dino: Dino) {
+        super("DUCKING")
+        this.dino = dino
+    }
+
+    override enter(): void {
+
+    }
+
+    override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
+        if (cursors.down?.isUp) {
+            this.dino.setCurrentState(DinoStateEnum.RUNNING)
+        }
+    }
+}
+
+export class Dead extends DinoState {
+    dino: Dino
+    constructor(dino: Dino) {
+        super("DEAD")
+        this.dino = dino
+    }
+
+    override enter() {
+        
+    }
 }

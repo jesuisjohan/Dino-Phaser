@@ -313,6 +313,7 @@ export default class DinoGame extends Phaser.Scene {
         if (!this.isGameRunning) {
             return
         }
+        // if (this.dinoState === DEAD) return
         if (!this.bgm.isPlaying) this.bgm.play()
         this.ground.tilePositionX += this.gameSpeed
         Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
