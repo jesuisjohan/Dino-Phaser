@@ -87,6 +87,11 @@ export default class DinoGame extends Phaser.Scene {
         this.physics.add.collider(this.obstacles, this.dino, this.handleLose, undefined, this)
     }
 
+    private createUI() {
+        this.createScoreLabel()
+        this.createHighScoreLabel()
+    }
+
     private createScoreLabel() {
         const { width } = this.scale
         this.scoreLabel = this.add
@@ -109,11 +114,6 @@ export default class DinoGame extends Phaser.Scene {
             })
             .setOrigin(1, 0)
             .setAlpha(0)
-    }
-
-    private createUI() {
-        this.createScoreLabel()
-        this.createHighScoreLabel()
     }
 
     private createStartTrigger() {
@@ -157,15 +157,17 @@ export default class DinoGame extends Phaser.Scene {
         })
     }
 
-    private handleLose() {
-        this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20
+    private getHighScore() {
         const highScoreKey = "high-score"
         const localHighScore = localStorage.getItem(highScoreKey)
-        if (!localHighScore || this.score > Number(localHighScore)) {
+        if (!localHighScore || this.score > Number(localHighScore))
             localStorage.setItem(highScoreKey, this.score.toString())
-        }
-        const highScore = Number(localStorage.getItem(highScoreKey))
-        this.highScoreLabel.setText(this.zerosPaddingScore(highScore, 5))
+        return Number(localStorage.getItem(highScoreKey))
+    }
+
+    private handleLose() {
+        this.highScoreLabel.x = this.scoreLabel.x - this.scoreLabel.width - 20
+        this.highScoreLabel.setText(this.zerosPaddingScore(this.getHighScore(), 5))
         this.highScoreLabel.setAlpha(1)
         this.physics.pause()
         this.isGameRunning = false
