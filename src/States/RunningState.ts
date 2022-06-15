@@ -1,9 +1,9 @@
 import Phaser from "phaser"
 import DinoStateEnum from "~/consts/DinoStateEnum"
-import DinoState from "./DinoState"
+import BaseDinoState from "./BaseDinoState"
 import Dino from "~/objects/Dino"
 
-export default class RunningState extends DinoState {
+export default class RunningState extends BaseDinoState {
     private dino: Dino
     constructor(dino: Dino) {
         super("RUNNING")

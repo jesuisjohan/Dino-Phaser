@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 
-export default class DinoState {
+export default class BaseDinoState {
     state: string
 
     constructor(state: string) {
@@ -19,12 +19,3 @@ export default class DinoState {
 
     public handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {}
 }
-
-
-
-
-
-
-
-
-

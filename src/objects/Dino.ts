@@ -9,14 +9,14 @@ import RunningState from "~/States/RunningState"
 import DuckingState from "~/States/DuckingState"
 import DeadState from "~/States/DeadState"
 
-import DinoState from "~/States/DinoState"
+import BaseDinoState from "~/States/BaseDinoState"
 import DinoStateEnum from "~/consts/DinoStateEnum"
 
 export default class Dino extends Phaser.GameObjects.Container {
     private dino!: Phaser.GameObjects.Sprite
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private jumpSound!: Phaser.Sound.BaseSound
-    private currentState!: DinoState
+    private currentState!: BaseDinoState
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y)
