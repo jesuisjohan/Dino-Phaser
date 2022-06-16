@@ -6,7 +6,7 @@ import Dino from "~/objects/Dino"
 export default class BombDroppingState extends BaseDinoState {
     private dino: Dino
     constructor(dino: Dino) {
-        super("BOMD-DROPPING")
+        super(DinoStateEnum.BOMB_DROPPING)
         this.dino = dino
     }
 
