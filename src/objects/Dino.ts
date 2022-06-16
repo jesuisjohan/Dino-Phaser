@@ -48,11 +48,11 @@ export default class Dino extends Phaser.GameObjects.Container {
         body.setOffset(0, 92)
     }
 
+    // utils
+    
     public playAnimation(key: DinoAnimationKeys) {
         this.dino.play(key, true)
     }
-
-    // utils
 
     public kill() {
         this.setCurrentState(DinoStateEnum.DEAD)
@@ -65,12 +65,8 @@ export default class Dino extends Phaser.GameObjects.Container {
     public isMovingRight() {
         return (this.body as Phaser.Physics.Arcade.Body).velocity.x > 0
     }
-
-    // update
-    preUpdate() {
-        this.currentState.handleInput(this.cursors)
-        console.log(this.currentState.state)
-    }
+    
+    // state management
 
     // handleInput() {
     //     if (cursors.down?.isDown) {
@@ -82,7 +78,6 @@ export default class Dino extends Phaser.GameObjects.Container {
     //     }
     // }
 
-    // state management
 
     public idle() {
         const body = this.body as Phaser.Physics.Arcade.Body
@@ -150,5 +145,10 @@ export default class Dino extends Phaser.GameObjects.Container {
             }
         }
         this.currentState.enter()
+    }
+
+    preUpdate() {
+        this.currentState.handleInput(this.cursors)
+        console.log(this.currentState.state)
     }
 }
