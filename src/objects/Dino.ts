@@ -130,6 +130,7 @@ export default class Dino extends Phaser.GameObjects.Container {
 
     public dead() {
         // this.dino.play(DinoAnimationKeys.DinoHurt, true)
+        const body = this.body as Phaser.Physics.Arcade.Body
     }
 
     public setCurrentState(state: DinoStateEnum) {
@@ -168,7 +169,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     private createFeetCollider() {
-        this.feetCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0)
+        this.feetCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0).setImmovable()
         this.feetCollider.body.setCircle(20)
         this.feetCollider.body.setCollideWorldBounds(true)
         this.scene.physics.add.existing(this.feetCollider, true)
@@ -187,7 +188,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     private createHeadCollider() {
-        this.headCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0)
+        this.headCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0).setImmovable()
         this.headCollider.body.setSize(44, 30)
         this.headCollider.body.setCollideWorldBounds(true)
         this.scene.physics.add.existing(this.headCollider, true)

@@ -228,16 +228,19 @@ export default class DinoGame extends Phaser.Scene {
         const distance = Phaser.Math.Between(100, 300)
 
         let obstacle: Phaser.Physics.Arcade.Sprite
+
         if (numObstacles > 5) {
-            const enemyHeight = [20, 70, 100]
+            const birdHeight = [20, 70, 100]
             obstacle = this.obstacles
                 .create(
                     width + distance,
-                    height - enemyHeight[this.getRandomInt(enemyHeight.length)],
+                    height - birdHeight[this.getRandomInt(birdHeight.length)],
                     DinoTextureKeys.EnemyBird
                 )
                 .setOrigin(0, 1)
             obstacle.play(DinoAnimationKeys.EnemyBird, true)
+            const obstacleBody = obstacle.body as Phaser.Physics.Arcade.Body
+            obstacleBody.setSize(undefined, 40)
         } else {
             let textureKey: DinoTextureKeys
             let cactusHeight: number
@@ -301,7 +304,7 @@ export default class DinoGame extends Phaser.Scene {
             const cloud = object as Phaser.GameObjects.Image
             const rightEdge = cloud.x + cloud.width
             if (rightEdge < 0) {
-                const { width, height } = this.scale
+                const { width } = this.scale
                 cloud.x = width + 30
             }
         })
