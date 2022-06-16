@@ -22,7 +22,7 @@ export default class DinoLoading extends Phaser.Scene {
 
     private createSounds() {
         this.intro = this.sound.add(DinoAudioKeys.Intro, { volume: 0.2 })
-        // this.intro.play()
+        this.intro.play()
     }
 
     private createPercentageLabel() {
@@ -56,8 +56,8 @@ export default class DinoLoading extends Phaser.Scene {
     }
 
     update(time: number, deltaTime: number) {
-        this.scene.start(DinoSceneKeys.Game)
-        return
+        // this.scene.start(DinoSceneKeys.Game)
+        // return
         const { width, height } = this.scale
         const displayProgress = this.progress > 1 ? 1 : this.progress
         this.debug.clear()

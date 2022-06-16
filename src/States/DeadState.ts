@@ -6,7 +6,7 @@ import Dino from "~/objects/Dino"
 export default class DeadState extends BaseDinoState {
     private dino: Dino
     constructor(dino: Dino) {
-        super("DEAD")
+        super(DinoStateEnum.DEAD)
         this.dino = dino
     }
 
