@@ -21,19 +21,27 @@ export default class Dino extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y)
         this.scene = scene
-        this.createSound(scene)
-        this.createDinoSprite(scene)
-        this.addDinoPhysicsBody(scene)
+        this.createSound()
+        this.createDino()
         this.setCurrentState(DinoStateEnum.IDLING)
-        this.cursors = scene.input.keyboard.createCursorKeys()
+        this.createInput()
+    }
+    
+    private createInput() {
+        this.cursors = this.scene.input.keyboard.createCursorKeys()
     }
 
-    private createSound(scene: Phaser.Scene) {
-        this.jumpSound = scene.sound.add(DinoAudioKeys.Jump, { volume: 1 })
+    private createSound() {
+        this.jumpSound = this.scene.sound.add(DinoAudioKeys.Jump, { volume: 1 })
     }
 
-    private createDinoSprite(scene: Phaser.Scene) {
-        this.dino = scene.add
+    private createDino() {
+        this.createDinoSprite()
+        this.addDinoPhysicsBody()
+    }
+
+    private createDinoSprite() {
+        this.dino = this.scene.add
             .sprite(0, 0, DinoTextureKeys.Dino)
             .setOrigin(0, 0)
             .play(DinoAnimationKeys.DinoIdle)
@@ -41,8 +49,8 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.add(this.dino)
     }
 
-    private addDinoPhysicsBody(scene: Phaser.Scene) {
-        scene.physics.add.existing(this)
+    private addDinoPhysicsBody() {
+        this.scene.physics.add.existing(this)
         const body = this.body as Phaser.Physics.Arcade.Body
         body.setSize(88, 92)
         body.setOffset(0, 92)
