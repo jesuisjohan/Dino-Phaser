@@ -8,7 +8,7 @@ export default class DinoGameOver extends Phaser.Scene {
         super(DinoSceneKeys.GameOver)
     }
 
-    private create() {
+    create() {
         this.createGameOverScreen()
     }
 
