@@ -84,7 +84,8 @@ export default class DinoGame extends Phaser.Scene {
 
     private createObstacles() {
         this.obstacles = this.physics.add.group()
-        this.physics.add.collider(this.obstacles, this.dino, this.handleLose, undefined, this)
+        this.physics.add.collider(this.obstacles, this.dino.getHeadCollider(), this.handleLose, undefined, this)
+        this.physics.add.collider(this.obstacles, this.dino.getFeetCollider(), this.handleLose, undefined, this)
     }
 
     private createUI() {
@@ -196,8 +197,6 @@ export default class DinoGame extends Phaser.Scene {
                 if (this.score % 100 == 0) {
                     this.reachSound.play()
                     this.runScoreBlinkAnimation()
-                }
-                if (this.score % 500) {
                 }
                 this.scoreLabel.setText(this.zerosPaddingScore(this.score, 5))
             },
