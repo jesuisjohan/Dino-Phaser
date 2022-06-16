@@ -73,6 +73,12 @@ export default class Dino extends Phaser.GameObjects.Container {
     public isMovingRight() {
         return (this.body as Phaser.Physics.Arcade.Body).velocity.x > 0
     }
+
+    private changeBodyIdleRun() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setSize(88, 92)
+        body.offset.y = 0
+    }
     
     // state management
 
@@ -88,10 +94,7 @@ export default class Dino extends Phaser.GameObjects.Container {
 
 
     public idle() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        body.setSize(88, 92)
-        body.offset.y = 0
-
+        this.changeBodyIdleRun()
         this.dino.play(DinoAnimationKeys.DinoIdle, true)
     }
 
@@ -117,10 +120,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     public run() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        body.setSize(88, 92)
-        body.offset.y = 0
-
+        this.changeBodyIdleRun()
         this.dino.play(DinoAnimationKeys.DinoRun, true)
     }
 
