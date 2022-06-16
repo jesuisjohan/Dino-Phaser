@@ -18,6 +18,9 @@ export default class Dino extends Phaser.GameObjects.Container {
     private jumpSound!: Phaser.Sound.BaseSound
     private currentState!: BaseDinoState
 
+    private feetCollider!: Phaser.Types.Physics.Arcade.ImageWithDynamicBody
+    private headCollider!: Phaser.Types.Physics.Arcade.ImageWithDynamicBody
+
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y)
         this.scene = scene
@@ -26,7 +29,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.setCurrentState(DinoStateEnum.IDLING)
         this.createInput()
     }
-    
+
     private createInput() {
         this.cursors = this.scene.input.keyboard.createCursorKeys()
     }
@@ -38,6 +41,8 @@ export default class Dino extends Phaser.GameObjects.Container {
     private createDino() {
         this.createDinoSprite()
         this.addDinoPhysicsBody()
+        this.createFeetCollider()
+        this.createHeadCollider()
     }
 
     private createDinoSprite() {
@@ -57,7 +62,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     // utils
-    
+
     public playAnimation(key: DinoAnimationKeys) {
         this.dino.play(key, true)
     }
@@ -79,7 +84,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         body.setSize(88, 92)
         body.offset.y = 0
     }
-    
+
     // state management
 
     // handleInput() {
@@ -91,7 +96,6 @@ export default class Dino extends Phaser.GameObjects.Container {
     //         this.state.jump()
     //     }
     // }
-
 
     public idle() {
         this.changeBodyIdleRun()
@@ -158,5 +162,38 @@ export default class Dino extends Phaser.GameObjects.Container {
     preUpdate() {
         this.currentState.handleInput(this.cursors)
         console.log(this.currentState.state)
+
+        this.updateFeetCollider()
+        this.updateHeadCollider()
+    }
+
+    createFeetCollider() {
+        this.feetCollider = this.scene.physics.add.image(0, 0, "").setVisible(false).setOrigin(0, 0)
+        this.feetCollider.body.setCircle(20)
+        this.feetCollider.body.setCollideWorldBounds(true)
+        this.scene.physics.add.existing(this.feetCollider, true)
+    }
+
+    updateFeetCollider() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        this.feetCollider.setPosition(
+            body.position.x + 15,
+            body.position.y + body.height - 2 * this.feetCollider.body.radius
+        )
+    }
+
+    createHeadCollider() {
+        this.headCollider = this.scene.physics.add.image(0, 0, "").setVisible(false).setOrigin(0, 0)
+        this.headCollider.body.setSize(44, 30)
+        this.headCollider.body.setCollideWorldBounds(true)
+        this.scene.physics.add.existing(this.headCollider, true)
+    }
+
+    updateHeadCollider() {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        this.headCollider.setPosition(
+            body.position.x + (body.width - this.headCollider.body.width) + 5,
+            body.position.y
+        )
     }
 }

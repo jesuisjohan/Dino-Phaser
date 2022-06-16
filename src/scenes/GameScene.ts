@@ -197,8 +197,6 @@ export default class DinoGame extends Phaser.Scene {
                     this.reachSound.play()
                     this.runScoreBlinkAnimation()
                 }
-                if (this.score % 500) {
-                }
                 this.scoreLabel.setText(this.zerosPaddingScore(this.score, 5))
             },
         })
