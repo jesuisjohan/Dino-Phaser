@@ -1,7 +1,7 @@
-import DinoTextureKeys from "~/consts/DinoTextureKeys"
+import DinoTextureKeys from "~/consts/TextureKeys"
 import Phaser from "phaser"
-import DinoSceneKeys from "~/consts/DinoSceneKeys"
-import DinoAudioKeys from "~/consts/DinoAudioKeys"
+import DinoSceneKeys from "~/consts/SceneKeys"
+import DinoAudioKeys from "~/consts/AudioKeys"
 
 export default class DinoGameOver extends Phaser.Scene {
     constructor() {

@@ -1,8 +1,8 @@
-import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
+import DinoAnimationKeys from "~/consts/AnimationKeys"
 import Phaser from "phaser"
-import DinoSceneKeys from "~/consts/DinoSceneKeys"
-import DinoAudioKeys from "~/consts/DinoAudioKeys"
-import DinoTextureKeys from "~/consts/DinoTextureKeys"
+import DinoSceneKeys from "~/consts/SceneKeys"
+import DinoAudioKeys from "~/consts/AudioKeys"
+import DinoTextureKeys from "~/consts/TextureKeys"
 import Dino from "~/objects/Dino"
 
 export default class DinoGame extends Phaser.Scene {

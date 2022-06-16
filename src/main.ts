@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 
-import DinoPreloader from "./scenes/DinoPreloader";
-import DinoGame from "./scenes/DinoGame";
-import DinoGameOver from "./scenes/DinoGameOver";
-import DinoLoading from "./scenes/DinoLoading";
+import DinoPreloader from "./scenes/PreloaderScene";
+import DinoGame from "./scenes/GameScene";
+import DinoGameOver from "./scenes/GameOverScene";
+import DinoLoading from "./scenes/LoadingScene";
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,

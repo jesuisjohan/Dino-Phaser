@@ -1,6 +1,6 @@
 import Phaser from "phaser"
-import DinoSceneKeys from "~/consts/DinoSceneKeys"
-import DinoAudioKeys from "~/consts/DinoAudioKeys"
+import DinoSceneKeys from "~/consts/SceneKeys"
+import DinoAudioKeys from "~/consts/AudioKeys"
 
 export default class DinoLoading extends Phaser.Scene {
     private debug!: Phaser.GameObjects.Graphics

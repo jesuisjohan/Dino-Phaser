@@ -1,9 +1,11 @@
-enum AnimationKeys {
-    RocketMouseRun = "rocket-mouse-run",
-    RocketFlamesOn = "rocket-flames-on",
-    RocketMouseFall = "rocket-mouse-fall",
-    RocketMouseFly = "rocket-mouse-fly",
-    RocketMouseDead = "rocket-mouse-dead",
+enum DinoAnimationKeys {
+    DinoIdle = "dino-idle",
+    DinoRun = "dino-run",
+    DinoHurt = "dino-hurt",
+    DinoDown = "dino-down",
+    EnemyBird = "enemy-bird",
+    Moon = "moon",
+    Stars = "stars",
 }
 
-export default AnimationKeys;
+export default DinoAnimationKeys

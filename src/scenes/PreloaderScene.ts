@@ -1,8 +1,8 @@
 import Phaser from "phaser"
-import DinoSceneKeys from "~/consts/DinoSceneKeys"
-import DinoTextureKeys from "~/consts/DinoTextureKeys"
-import DinoAudioKeys from "~/consts/DinoAudioKeys"
-import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
+import DinoSceneKeys from "~/consts/SceneKeys"
+import DinoTextureKeys from "~/consts/TextureKeys"
+import DinoAudioKeys from "~/consts/AudioKeys"
+import DinoAnimationKeys from "~/consts/AnimationKeys"
 
 export default class DinoPreloader extends Phaser.Scene {
     constructor() {

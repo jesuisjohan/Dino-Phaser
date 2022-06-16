@@ -1,15 +1,15 @@
 import Phaser from "phaser"
-import DinoAnimationKeys from "~/consts/DinoAnimationKeys"
-import DinoAudioKeys from "~/consts/DinoAudioKeys"
-import DinoTextureKeys from "~/consts/DinoTextureKeys"
+import DinoAnimationKeys from "~/consts/AnimationKeys"
+import DinoAudioKeys from "~/consts/AudioKeys"
+import DinoTextureKeys from "~/consts/TextureKeys"
 
-import IdlingState from "~/States/IdlingState"
-import JumpingState from "~/States/JumpingState"
-import RunningState from "~/States/RunningState"
-import DuckingState from "~/States/DuckingState"
-import DeadState from "~/States/DeadState"
+import IdlingState from "~/states/IdlingState"
+import JumpingState from "~/states/JumpingState"
+import RunningState from "~/states/RunningState"
+import DuckingState from "~/states/DuckingState"
+import DeadState from "~/states/DeadState"
 
-import BaseDinoState from "~/States/BaseDinoState"
+import BaseDinoState from "~/states/BaseDinoState"
 import DinoStateEnum from "~/consts/DinoStateEnum"
 
 export default class Dino extends Phaser.GameObjects.Container {
