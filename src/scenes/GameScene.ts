@@ -1,5 +1,5 @@
-import DinoAnimationKeys from "~/consts/AnimationKeys"
 import Phaser from "phaser"
+import DinoAnimationKeys from "~/consts/AnimationKeys"
 import DinoSceneKeys from "~/consts/SceneKeys"
 import DinoAudioKeys from "~/consts/AudioKeys"
 import DinoTextureKeys from "~/consts/TextureKeys"
