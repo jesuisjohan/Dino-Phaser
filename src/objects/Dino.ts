@@ -129,7 +129,7 @@ export default class Dino extends Phaser.GameObjects.Container {
     }
 
     public dead() {
-        this.dino.play(DinoAnimationKeys.DinoHurt, true)
+        // this.dino.play(DinoAnimationKeys.DinoHurt, true)
     }
 
     public setCurrentState(state: DinoStateEnum) {
@@ -167,14 +167,14 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.updateHeadCollider()
     }
 
-    createFeetCollider() {
-        this.feetCollider = this.scene.physics.add.image(0, 0, "").setVisible(false).setOrigin(0, 0)
+    private createFeetCollider() {
+        this.feetCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0)
         this.feetCollider.body.setCircle(20)
         this.feetCollider.body.setCollideWorldBounds(true)
         this.scene.physics.add.existing(this.feetCollider, true)
     }
 
-    updateFeetCollider() {
+    private updateFeetCollider() {
         const body = this.body as Phaser.Physics.Arcade.Body
         this.feetCollider.setPosition(
             body.position.x + 15,
@@ -182,18 +182,26 @@ export default class Dino extends Phaser.GameObjects.Container {
         )
     }
 
-    createHeadCollider() {
-        this.headCollider = this.scene.physics.add.image(0, 0, "").setVisible(false).setOrigin(0, 0)
+    public getFeetCollider() {
+        return this.feetCollider
+    }
+
+    private createHeadCollider() {
+        this.headCollider = this.scene.physics.add.sprite(0, 0, "").setVisible(false).setOrigin(0, 0)
         this.headCollider.body.setSize(44, 30)
         this.headCollider.body.setCollideWorldBounds(true)
         this.scene.physics.add.existing(this.headCollider, true)
     }
 
-    updateHeadCollider() {
+    private updateHeadCollider() {
         const body = this.body as Phaser.Physics.Arcade.Body
         this.headCollider.setPosition(
             body.position.x + (body.width - this.headCollider.body.width) + 5,
-            body.position.y
+            body.position.y + 2
         )
+    }
+
+    public getHeadCollider() {
+        return this.headCollider
     }
 }

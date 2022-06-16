@@ -84,7 +84,8 @@ export default class DinoGame extends Phaser.Scene {
 
     private createObstacles() {
         this.obstacles = this.physics.add.group()
-        this.physics.add.collider(this.obstacles, this.dino, this.handleLose, undefined, this)
+        this.physics.add.collider(this.obstacles, this.dino.getHeadCollider(), this.handleLose, undefined, this)
+        this.physics.add.collider(this.obstacles, this.dino.getFeetCollider(), this.handleLose, undefined, this)
     }
 
     private createUI() {
