@@ -1,9 +1,10 @@
 import Phaser from "phaser"
+import DinoStateEnum from "~/consts/DinoStateEnum"
 
 export default class BaseDinoState {
-    state: string
+    state: DinoStateEnum
 
-    constructor(state: string) {
+    constructor(state: DinoStateEnum) {
         this.state = state
     }
 
