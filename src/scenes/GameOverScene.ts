@@ -4,12 +4,19 @@ import DinoSceneKeys from "~/consts/SceneKeys"
 import DinoAudioKeys from "~/consts/AudioKeys"
 
 export default class DinoGameOver extends Phaser.Scene {
+    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+
     constructor() {
         super(DinoSceneKeys.GameOver)
     }
 
     create() {
         this.createGameOverScreen()
+        this.createInput()
+    }
+
+    private createInput() {
+        this.cursors = this.input.keyboard.createCursorKeys()
     }
 
     private createGameOverScreen() {
@@ -21,9 +28,19 @@ export default class DinoGameOver extends Phaser.Scene {
         gameOverScreen.add([gameOverText, restart])
 
         restart.on("pointerdown", () => {
-            this.scene.stop(DinoSceneKeys.GameOver)
-            this.scene.stop(DinoSceneKeys.Game)
-            this.scene.start(DinoSceneKeys.Game)
+            this.restartGame()
         })
+    }
+    
+    private restartGame() {
+        this.scene.stop(DinoSceneKeys.GameOver)
+        this.scene.stop(DinoSceneKeys.Game)
+        this.scene.start(DinoSceneKeys.Game)    
+    }
+
+    update() {
+        if (this.cursors.space?.isDown) {
+            this.restartGame()
+        }
     }
 }
