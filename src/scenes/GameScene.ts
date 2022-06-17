@@ -118,20 +118,31 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     private createStartTrigger() {
-        this.startTrigger = this.physics.add.sprite(1, 10, "").setOrigin(0, 0).setImmovable().setVisible(false)
+        this.startTrigger = this.physics.add
+            .sprite(1, this.triggerPositionY(), "")
+            .setOrigin(0, 1)
+            .setImmovable()
+            .setVisible(false)
         this.physics.add.overlap(this.startTrigger, this.dino, this.handleStart, undefined, this)
+    }
+
+    private triggerPositionY() {
+        const { height } = this.scale
+        const dinoBody = this.dino.body as Phaser.Physics.Arcade.Body
+        const distanceToDino = 1
+        return height - dinoBody.height - distanceToDino
     }
 
     /**
      * Turn off start trigger when start the game
      * @returns None
      */
-    private handleStart(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+    private handleStart() {
         console.log("handleStart")
         const { width, height } = this.scale
         const startTriggerBody = this.startTrigger.body as Phaser.Physics.Arcade.Body
-        if (this.startTrigger.y == 10) {
-            this.startTrigger.setOrigin(0, 1)
+        if (this.startTrigger.y == this.triggerPositionY()) {
+            // this.startTrigger.setOrigin(0, 1)
             startTriggerBody.reset(0, height) // bring trigger start to foot of dino for else branch
             return
         }

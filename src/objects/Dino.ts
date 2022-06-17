@@ -130,7 +130,13 @@ export default class Dino extends Phaser.GameObjects.Container {
 
     public dead() {
         // this.dino.play(DinoAnimationKeys.DinoHurt, true)
+
         const body = this.body as Phaser.Physics.Arcade.Body
+        const headBody = this.headCollider.body as Phaser.Physics.Arcade.Body
+        const feetBody = this.feetCollider.body as Phaser.Physics.Arcade.Body
+
+        body.position.x = feetBody.position.x - 15
+        body.position.y = headBody.position.y - 2
     }
 
     public setCurrentState(state: DinoStateEnum) {
@@ -164,8 +170,8 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.currentState.handleInput(this.cursors)
         console.log(this.currentState.state)
 
-        this.updateFeetCollider()
-        this.updateHeadCollider()
+        this.updateFeetColliderPosition()
+        this.updateHeadColliderPosition()
     }
 
     private createFeetCollider() {
@@ -175,7 +181,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.scene.physics.add.existing(this.feetCollider, true)
     }
 
-    private updateFeetCollider() {
+    private updateFeetColliderPosition() {
         const body = this.body as Phaser.Physics.Arcade.Body
         this.feetCollider.setPosition(
             body.position.x + 15,
@@ -194,7 +200,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.scene.physics.add.existing(this.headCollider, true)
     }
 
-    private updateHeadCollider() {
+    private updateHeadColliderPosition() {
         const body = this.body as Phaser.Physics.Arcade.Body
         this.headCollider.setPosition(
             body.position.x + (body.width - this.headCollider.body.width) + 5,
