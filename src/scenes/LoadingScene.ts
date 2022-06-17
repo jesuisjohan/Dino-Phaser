@@ -26,7 +26,7 @@ export default class DinoLoading extends Phaser.Scene {
     }
 
     private createPercentageLabel() {
-        const { width, height } = this.scale
+        const { width } = this.scale
         this.percentageLabel = this.add
             .text(width, 0, "0%", {
                 color: "#535353",
