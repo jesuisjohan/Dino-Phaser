@@ -23,7 +23,7 @@ export default class DuckingState extends BaseDinoState {
     // }
 
     public override handleInput(cursors: Phaser.Types.Input.Keyboard.CursorKeys): void {
-        if (cursors.down?.isUp) {
+        if (cursors.down?.isUp && this.dino.onGround()) {
             this.dino.setCurrentState(DinoStateEnum.RUNNING)
         }
     }
