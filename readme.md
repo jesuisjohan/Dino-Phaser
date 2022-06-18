@@ -3,6 +3,9 @@
 
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Play
+You can play online here [Dino Phaser](https://jesuisjohan.github.io/)
+
 ## Prerequisites
 
 You'll need [Node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/), and [Parcel](https://parceljs.org/) installed.
