@@ -10,6 +10,11 @@ You can play online here [Dino Phaser](https://jesuisjohan.github.io/)
 - Apply state design pattern to create a simple state machine for player
 - Implement new compound body based on Arcade Physics Plugin of Phaser 3 because Arcade does not support multiple colliders in one game object.
 
+
+![Compound Body when running](/imgs/compoundbody1.png)
+
+![Compound Body when ducking](/imgs/compoundbody2.png)
+
 ## Prerequisites
 
 You'll need [Node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/), and [Parcel](https://parceljs.org/) installed.
