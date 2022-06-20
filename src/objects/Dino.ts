@@ -107,7 +107,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         body.setSize(118, 58)
         body.offset.y = 34
 
-        const vy = 1600
+        const vy = 1400
         body.setVelocityY(vy)
 
         this.dino.play(DinoAnimationKeys.DinoDown, true)
@@ -117,7 +117,7 @@ export default class Dino extends Phaser.GameObjects.Container {
         this.jumpSound.play()
 
         const body = this.body as Phaser.Physics.Arcade.Body
-        const vy = 1600
+        const vy = 1400
         body.setVelocityY(-vy)
 
         this.dino.anims.stop()

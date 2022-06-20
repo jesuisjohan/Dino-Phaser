@@ -26,6 +26,7 @@ export default class DinoGame extends Phaser.Scene {
     private isGameRunning = false
     private respawnTime = 0
     private hasHitSoundPlayed = false
+    private dtOn144Hz = 6.9 // this is what I recorded
 
     constructor() {
         super(DinoSceneKeys.Game)
@@ -322,11 +323,12 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     update(t: number, dt: number) {
+        console.log(dt)
         if (!this.isGameRunning) return
         if (!this.bgm.isPlaying) this.bgm.play()
-        this.ground.tilePositionX += this.gameSpeed
-        Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
-        Phaser.Actions.IncX(this.clouds.getChildren(), -0.5)
+        this.ground.tilePositionX += this.gameSpeed * dt / this.dtOn144Hz
+        Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed * dt/this.dtOn144Hz)
+        Phaser.Actions.IncX(this.clouds.getChildren(), -0.5 * dt / this.dtOn144Hz)
         this.respawnTime += dt * this.gameSpeed * 0.05
         if (this.respawnTime >= 500) {
             this.spawnObstacles()
