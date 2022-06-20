@@ -38,7 +38,7 @@ export default class DinoLoading extends Phaser.Scene {
 
     private createLoadingLabel() {
         this.loadingLabel = this.add
-            .text(0, 0, "VER 1.1 LOADING...", {
+            .text(0, 0, "LOADING...", {
                 color: "#535353",
                 font: "900 35px Courier",
                 resolution: 5,
