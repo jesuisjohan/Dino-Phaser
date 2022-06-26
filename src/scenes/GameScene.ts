@@ -323,7 +323,6 @@ export default class DinoGame extends Phaser.Scene {
     }
 
     update(t: number, dt: number) {
-        console.log(dt)
         if (!this.isGameRunning) return
         if (!this.bgm.isPlaying) this.bgm.play()
         this.ground.tilePositionX += this.gameSpeed * dt / this.dtOn144Hz
